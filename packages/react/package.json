@@ -1,0 +1,24 @@
+{
+  "name": "@hc/react",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "@hc/core を React から使うフック (見た目なし)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hc/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  }
+}

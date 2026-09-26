@@ -1,0 +1,263 @@
+[
+  {
+    "email": "member001@group-a.example.com",
+    "name": "山本 陽菜",
+    "department": "人事",
+    "role": "リーダー",
+    "status": "onLeave",
+    "joinedAt": "2021-06-24",
+    "salary": 8600000
+  },
+  {
+    "email": "member002@group-a.example.com",
+    "name": "鈴木 颯太",
+    "department": "人事",
+    "role": "ディレクター",
+    "status": "active",
+    "joinedAt": "2023-07-01",
+    "salary": 6100000
+  },
+  {
+    "email": "member003@group-a.example.com",
+    "name": "伊藤 美咲",
+    "department": "営業",
+    "role": "メンバー",
+    "status": "active",
+    "joinedAt": "2025-02-27",
+    "salary": 5600000
+  },
+  {
+    "email": "member004@group-a.example.com",
+    "name": "高橋 大翔",
+    "department": "経理",
+    "role": "マネージャー",
+    "status": "retired",
+    "joinedAt": "2021-04-21",
+    "salary": 8800000
+  },
+  {
+    "email": "member005@group-a.example.com",
+    "name": "高橋 悠真",
+    "department": "経理",
+    "role": "リーダー",
+    "status": "retired",
+    "joinedAt": "2016-08-10",
+    "salary": 5800000
+  },
+  {
+    "email": "member006@group-a.example.com",
+    "name": "渡辺 美咲",
+    "department": "営業",
+    "role": "メンバー",
+    "status": "onLeave",
+    "joinedAt": "2015-03-28",
+    "salary": 5200000
+  },
+  {
+    "email": "member007@group-a.example.com",
+    "name": "鈴木 結衣",
+    "department": "営業",
+    "role": "マネージャー",
+    "status": "active",
+    "joinedAt": "2016-09-09",
+    "salary": 6300000
+  },
+  {
+    "email": "member008@group-a.example.com",
+    "name": "中村 翼",
+    "department": "営業",
+    "role": "メンバー",
+    "status": "onLeave",
+    "joinedAt": "2020-11-24",
+    "salary": 7500000
+  },
+  {
+    "email": "member009@group-a.example.com",
+    "name": "中村 美咲",
+    "department": "経理",
+    "role": "リーダー",
+    "status": "retired",
+    "joinedAt": "2015-02-19",
+    "salary": 4300000
+  },
+  {
+    "email": "member010@group-a.example.com",
+    "name": "渡辺 陽向",
+    "department": "マーケティング",
+    "role": "リーダー",
+    "status": "active",
+    "joinedAt": "2016-07-08",
+    "salary": 3500000
+  },
+  {
+    "email": "member011@group-a.example.com",
+    "name": "鈴木 翼",
+    "department": "営業",
+    "role": "メンバー",
+    "status": "active",
+    "joinedAt": "2021-10-15",
+    "salary": 7500000
+  },
+  {
+    "email": "member012@group-a.example.com",
+    "name": "中村 陽向",
+    "department": "マーケティング",
+    "role": "マネージャー",
+    "status": "onLeave",
+    "joinedAt": "2023-04-14",
+    "salary": 9300000
+  },
+  {
+    "email": "member013@group-a.example.com",
+    "name": "高橋 悠真",
+    "department": "マーケティング",
+    "role": "マネージャー",
+    "status": "retired",
+    "joinedAt": "2018-12-14",
+    "salary": 4600000
+  },
+  {
+    "email": "member014@group-a.example.com",
+    "name": "佐藤 翼",
+    "department": "エンジニアリング",
+    "role": "マネージャー",
+    "status": "active",
+    "joinedAt": "2024-11-20",
+    "salary": 8600000
+  },
+  {
+    "email": "member015@group-a.example.com",
+    "name": "田中 蓮",
+    "department": "エンジニアリング",
+    "role": "ディレクター",
+    "status": "onLeave",
+    "joinedAt": "2016-01-01",
+    "salary": 8500000
+  },
+  {
+    "email": "member016@group-a.example.com",
+    "name": "高橋 さくら",
+    "department": "エンジニアリング",
+    "role": "メンバー",
+    "status": "onLeave",
+    "joinedAt": "2016-07-19",
+    "salary": 7100000
+  },
+  {
+    "email": "member017@group-a.example.com",
+    "name": "佐藤 陽菜",
+    "department": "経理",
+    "role": "メンバー",
+    "status": "onLeave",
+    "joinedAt": "2020-03-24",
+    "salary": 6500000
+  },
+  {
+    "email": "member018@group-a.example.com",
+    "name": "山本 翼",
+    "department": "経理",
+    "role": "ディレクター",
+    "status": "onLeave",
+    "joinedAt": "2017-07-02",
+    "salary": 8300000
+  },
+  {
+    "email": "member019@group-a.example.com",
+    "name": "渡辺 大翔",
+    "department": "人事",
+    "role": "リーダー",
+    "status": "retired",
+    "joinedAt": "2024-06-02",
+    "salary": 4200000
+  },
+  {
+    "email": "member020@group-a.example.com",
+    "name": "鈴木 翼",
+    "department": "経理",
+    "role": "メンバー",
+    "status": "onLeave",
+    "joinedAt": "2023-12-23",
+    "salary": 8700000
+  },
+  {
+    "email": "member021@group-a.example.com",
+    "name": "佐藤 悠真",
+    "department": "経理",
+    "role": "リーダー",
+    "status": "onLeave",
+    "joinedAt": "2019-10-21",
+    "salary": 8800000
+  },
+  {
+    "email": "member022@group-a.example.com",
+    "name": "山本 さくら",
+    "department": "人事",
+    "role": "マネージャー",
+    "status": "onLeave",
+    "joinedAt": "2016-12-06",
+    "salary": 8800000
+  },
+  {
+    "email": "member023@group-a.example.com",
+    "name": "小林 陽向",
+    "department": "人事",
+    "role": "マネージャー",
+    "status": "onLeave",
+    "joinedAt": "2015-08-17",
+    "salary": 7000000
+  },
+  {
+    "email": "member024@group-a.example.com",
+    "name": "加藤 陽向",
+    "department": "経理",
+    "role": "メンバー",
+    "status": "onLeave",
+    "joinedAt": "2017-02-09",
+    "salary": 7100000
+  },
+  {
+    "email": "member025@group-a.example.com",
+    "name": "小林 陽向",
+    "department": "経理",
+    "role": "リーダー",
+    "status": "onLeave",
+    "joinedAt": "2024-08-16",
+    "salary": 6200000
+  },
+  {
+    "email": "member026@group-a.example.com",
+    "name": "田中 結衣",
+    "department": "マーケティング",
+    "role": "リーダー",
+    "status": "retired",
+    "joinedAt": "2017-04-18",
+    "salary": 4000000
+  },
+  {
+    "email": "member027@group-a.example.com",
+    "name": "渡辺 陽向",
+    "department": "経理",
+    "role": "マネージャー",
+    "status": "retired",
+    "joinedAt": "2024-02-15",
+    "salary": 6600000
+  },
+  {
+    "email": "member028@group-a.example.com",
+    "name": "伊藤 美咲",
+    "department": "エンジニアリング",
+    "role": "リーダー",
+    "status": "active",
+    "joinedAt": "2020-09-17",
+    "salary": 4400000
+  },
+  {
+    "email": "member029@group-a.example.com",
+    "name": "中村 陽向",
+    "department": "営業",
+    "role": "マネージャー",
+    "status": "retired",
+    "joinedAt": "2016-12-02",
+    "salary": 4600000
+  }
+]

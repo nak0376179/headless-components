@@ -1,0 +1,25 @@
+import { Stack, Typography } from "@mui/material"
+import { CursorTable } from "@hc/mui"
+import { useController } from "@hc/react"
+import { createEmployeeSource } from "@hc/demo-data"
+import { employeeColumns } from "./employeeColumns"
+
+/** 1 ページずつ API に取りに行く (カーソル方式)。検索もサーバー側で行う。 */
+export function ServerPaginationDemo() {
+  const source = useController(() => createEmployeeSource(400))
+  return (
+    <Stack spacing={1}>
+      <Typography variant="body2" color="text.secondary">
+        「次へ」で nextCursor
+        を渡して次のページを取りに行き、「前へ」は訪れたページのカーソルを積んでおいて戻る (DynamoDB
+        の LastEvaluatedKey と同じ方式)。応答は 400ms 遅らせてある。
+      </Typography>
+      <CursorTable
+        fetchPage={source.fetchPage}
+        columns={employeeColumns}
+        getRowId={(e) => e.email}
+        searchPlaceholder="氏名・部署・役職で検索…（サーバー側で絞り込み）"
+      />
+    </Stack>
+  )
+}
