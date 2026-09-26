@@ -20,6 +20,13 @@
 - `pnpm test` は `vitest.config.ts` の projects で全パッケージを流す。jsdom に無い API のスタブは `test/setup.ts`。
 - `pnpm check` = format:check → lint → typecheck → test → build。push 前に通す。
 
+## アプリへの取り込み
+
+- npm には出していない。アプリへは `scripts/vendor.mjs` (`pnpm vendor <アプリ> --ui mui|vuetify`) でコピーする。取り込み先は `src/libs/ui-kit/`。
+- そのため **パッケージ間の import は必ず `@hc/<層>` から** 書く (vendor が相対パスに書き換える)。パッケージの中の相対 import で他の層を参照しない。
+- 取り込まない層 (demo-data など) を core / react / vue / mui / vuetify から参照すると、vendor がエラーにする。
+- 新しい外部依存を足したら、その層の package.json の dependencies / peerDependencies に書く (vendor がアプリに足りないものとして表示する)。
+
 ## 注意
 
 - Vue 側で TanStack の `table` 自体はリアクティブではない。テンプレートで `table` を読む箇所は、`useDataTable` の `state` を読んで依存を作る (`TableView.vue` の `version` prop)。

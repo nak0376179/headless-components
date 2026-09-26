@@ -53,6 +53,33 @@ CSV 変換の仕様の詳細は [docs/csv-json-spec.md](docs/csv-json-spec.md)�
 列定義は TanStack Table の `ColumnDef` をそのまま使う（`createColumnHelper` は `@hc/core` から再公開）。
 `header` / `cell` は値か関数で、関数の戻り値は React なら JSX、Vue なら `h()` の VNode を返せばよい。
 
+## アプリで使う (取り込み)
+
+npm には公開していない。アプリの `src/libs/ui-kit/` に**丸ごとコピーして使う**（vendoring）。
+
+```bash
+cd <このリポジトリ>
+pnpm vendor <アプリのディレクトリ> --ui mui        # React + MUI のアプリ
+pnpm vendor <アプリのディレクトリ> --ui vuetify    # Vue + Vuetify のアプリ
+```
+
+- 取り込み先は `src/libs/ui-kit/{core, react, mui}`（Vue なら `{core, vue, vuetify}`）。`--name` / `--dest` で変えられる。
+- 中の `@hc/*` の import は相対パスに書き換えるので、アプリ側に別名の設定は要らない。テストは含めない。
+- 足りない依存パッケージは、バージョン付きの `pnpm add ...` として表示される（そのまま実行する。バージョン無しで入れると @tanstack/table-core の新しいメジャー版が入って型が合わない）。
+
+```tsx
+import { DataTable, CsvJsonTextArea } from "@/libs/ui-kit/mui"
+import { email, type ColumnSpec } from "@/libs/ui-kit/core"
+import { useCsvJson } from "@/libs/ui-kit/react" // 見た目を自作するとき
+```
+
+**取り込んだ中身は編集しない。** 直すときはこのリポジトリを直して取り込み直す（同じコマンドで上書き）。
+アプリ固有の見た目や既定値は `src/components/` 側で包み直す。
+
+- `pnpm vendor <アプリ> --check` … 取り込み後に手で書き換えられたファイルを一覧する（取り込み記録 `.vendored.json` と比較）。
+- 書き換えがあると取り込み直しは中止する。取り込み記録の無いフォルダ（アプリのコード）は上書きしない。
+- 取り込み元のコミットは `src/libs/ui-kit/VENDORED.md` に残る。
+
 ## 開発
 
 ```bash
