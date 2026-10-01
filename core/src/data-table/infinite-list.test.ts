@@ -15,6 +15,7 @@ describe("createInfiniteList", () => {
 
   it("loadMore で後ろに足していき、最後で done になる", async () => {
     const list = createInfiniteList({ fetchPage: source().fetchPage, pageSize: 100 })
+    list.subscribe(() => {}) // UI と同じく購読すると読み始める
     await flush()
     expect(list.get().items).toHaveLength(100)
     await list.loadMore()
@@ -28,6 +29,7 @@ describe("createInfiniteList", () => {
 
   it("loadMore を連打しても 1 回分しか読まない", async () => {
     const list = createInfiniteList({ fetchPage: source().fetchPage, pageSize: 50 })
+    list.subscribe(() => {}) // UI と同じく購読すると読み始める
     await flush()
     await Promise.all([list.loadMore(), list.loadMore(), list.loadMore()])
     expect(list.get().items).toHaveLength(100)
@@ -39,6 +41,7 @@ describe("createInfiniteList", () => {
       pageSize: 50,
       searchDebounceMs: 0,
     })
+    list.subscribe(() => {}) // UI と同じく購読すると読み始める
     list.setSearch("特別")
     await flush()
     await flush()

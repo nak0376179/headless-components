@@ -7,6 +7,8 @@ export type {
   DataTableSnapshot,
 } from "./table"
 export { createCursorPager, fetchAllPages } from "./cursor-pager"
+export { getDefaultQueryClient } from "./cursor-query"
+export type { CursorQueryOptions } from "./cursor-query"
 export type {
   CursorPage,
   CursorPagerController,

@@ -1,13 +1,19 @@
 // 無限スクロールの読み込み (カーソル方式で次々に足していく) と、仮想スクロールの範囲計算。
 //
 // - 取得はサーバーページネーションと同じ fetchPage ({ limit, cursor, search } → { items, nextCursor })
-// - loadMore は二重に走らない。検索を変えると最初から読み直し、古い応答は捨てる
+// - 読み込みは TanStack Query の無限クエリ (cursor-query.ts)。loadMore は二重に走らず、
+//   検索を変えると最初から読み直し、古い応答は捨てる。前の検索に戻るとキャッシュから出る
 // - virtualWindow は「いま見えている行 ± overscan」だけを描くための計算 (行の高さが一定の前提)。
 //   1 万件読み込んでも DOM に出る行は画面の分だけになる
 import { createStore, type ReadableStore } from "../store"
-import type { FetchPage } from "./cursor-pager"
+import {
+  createCursorQuery,
+  errorMessage,
+  type CursorQueryOptions,
+  type FetchPage,
+} from "./cursor-query"
 
-export interface InfiniteListOptions<T> {
+export interface InfiniteListOptions<T> extends CursorQueryOptions {
   fetchPage: FetchPage<T>
   /** 1 回に取る件数。@default 50 */
   pageSize?: number
@@ -38,67 +44,65 @@ export interface InfiniteListController<T> extends ReadableStore<InfiniteListSta
 
 export function createInfiniteList<T>(options: InfiniteListOptions<T>): InfiniteListController<T> {
   const limit = options.pageSize ?? 50
-  let cursor: string | null = null
-  let generation = 0
+  const local = createStore({ search: "" })
+  const query = createCursorQuery(options.fetchPage, { ...options, search: "", limit })
   let debounce: ReturnType<typeof setTimeout> | undefined
-  const store = createStore<InfiniteListState<T>>({
-    items: [],
-    search: "",
-    loading: false,
-    error: null,
-    done: false,
-    pagesLoaded: 0,
-  })
+  let applied = "" // query に渡し済みの検索語 (入力中は local.search の方が先に進む)
 
-  const loadMore = async () => {
-    const s = store.get()
-    if (s.loading || s.done) return
-    const gen = generation
-    store.patch({ loading: true, error: null })
-    try {
-      const page = await options.fetchPage({ limit, cursor, search: s.search })
-      if (gen !== generation) return // 検索を変えた後に届いた古い応答
-      cursor = page.nextCursor
-      const now = store.get()
-      store.patch({
-        items: [...now.items, ...page.items],
-        loading: false,
-        done: page.nextCursor === null,
-        pagesLoaded: now.pagesLoaded + 1,
-      })
-    } catch (e) {
-      if (gen !== generation) return
-      store.patch({ loading: false, error: e instanceof Error ? e.message : String(e) })
+  let memo: { r: unknown; l: unknown; snap: InfiniteListState<T> } | undefined
+  const get = (): InfiniteListState<T> => {
+    const r = query.result()
+    const l = local.get()
+    if (memo && memo.r === r && memo.l === l) return memo.snap
+    const pages = l.search === applied ? (r.data?.pages ?? []) : [] // 入力を待っている間は空にする
+    const snap: InfiniteListState<T> = {
+      items: pages.flatMap((p) => p.items),
+      search: l.search,
+      loading: r.isFetching,
+      error: errorMessage(r.error),
+      done: r.isSuccess && !r.hasNextPage,
+      pagesLoaded: pages.length,
     }
+    memo = { r, l, snap }
+    return snap
   }
 
-  const restart = (search: string) => {
-    generation++
-    cursor = null
-    store.patch({ items: [], search, loading: false, error: null, done: false, pagesLoaded: 0 })
+  const apply = (search: string) => {
+    applied = search
+    query.setParams(search, limit)
   }
-
-  void loadMore()
 
   return {
-    get: store.get,
-    subscribe: store.subscribe,
-    loadMore,
+    get,
+    subscribe(listener) {
+      const offQuery = query.subscribe(listener)
+      const offLocal = local.subscribe(listener)
+      return () => {
+        offQuery()
+        offLocal()
+      }
+    },
+    async loadMore() {
+      const r = query.result()
+      // 初回 (まだ何も無い) は購読で読み始めるので、続きがあるときだけ読む
+      if (r.isFetching || !r.hasNextPage || local.get().search !== applied) return
+      await query.fetchNextPage()
+    },
     setSearch(search) {
-      restart(search)
       clearTimeout(debounce)
+      local.patch({ search })
       const wait = options.searchDebounceMs ?? 300
-      if (wait > 0) debounce = setTimeout(() => void loadMore(), wait)
-      else void loadMore()
+      if (wait > 0) debounce = setTimeout(() => apply(search), wait)
+      else apply(search)
     },
     reload() {
       clearTimeout(debounce)
-      restart(store.get().search)
-      void loadMore()
+      apply(local.get().search)
+      void query.refetch()
     },
     destroy() {
-      // ⚠ 世代は進めない — React の StrictMode は後始末を一度空打ちしてから同じコントローラを使い続けるので、
-      //   ここで応答を捨てると「読み込み中」のまま止まる (2026-10-02 に踏んだ)。止めるのは待ちのタイマーだけ。
+      // ⚠ query の購読はここで外さない — React の StrictMode は後始末を一度空打ちしてから同じコントローラを
+      //   使い続ける (2026-10-02 に踏んだ)。購読はストアの購読者がいなくなったときに外れる。
       clearTimeout(debounce)
     },
   }

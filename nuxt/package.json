@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "@tanstack/query-core": "^5.104.0",
     "@tanstack/table-core": "^8.21.3",
+    "@tanstack/vue-query": "^5.104.0",
     "nuxt": "^4.5.2",
     "papaparse": "^5.5.4",
     "vue": "^3.5.43",
