@@ -42,3 +42,13 @@ export {
   type PixelateOptions,
   type PixelateState,
 } from "./pixelate"
+export {
+  createSnowfall,
+  depositSnow,
+  relaxPile,
+  SNOW_COLUMN_PX,
+  type SnowfallController,
+  type SnowfallElements,
+  type SnowfallOptions,
+  type SnowfallState,
+} from "./snowfall"

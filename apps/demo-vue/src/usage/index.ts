@@ -7,6 +7,7 @@ import cardDemo from "../demos/CardDemo.vue?raw"
 import infComponent from "./infinite/Component.vue?raw"
 import infHeadless from "./infinite/Headless.vue?raw"
 import tableBasicsDemo from "../demos/TableBasicsDemo.vue?raw"
+import fxSnow from "./effects/Snow.vue?raw"
 import formBasic from "./form/Basic.vue?raw"
 import formRules from "./form/rules.ts?raw"
 import selectDemo from "../demos/form/SelectDemo.vue?raw"
@@ -211,6 +212,15 @@ export const usageBySlug: Record<string, UsageBlock[]> = {
   jigsaw: [{ title: "ページを包む", lang: "vue", file: "April1st.vue", code: fxJigsaw }],
   shatter: [{ title: "ページを包む", lang: "vue", file: "Fragile.vue", code: fxShatter }],
   "cheat-code": [{ title: "ページを包む", lang: "vue", file: "EasterEgg.vue", code: fxCheat }],
+  snow: [
+    {
+      title: "ページを包む",
+      note: "積もらせたい要素に data-snow-target を付ける。要素が動いても雪は一緒に動く。shake で払い落とし、melt で溶かす。",
+      lang: "vue",
+      file: "WinterLogin.vue",
+      code: fxSnow,
+    },
+  ],
   pixelate: [{ title: "ページを包む", lang: "vue", file: "Spoiler.vue", code: fxPixelate }],
 }
 
