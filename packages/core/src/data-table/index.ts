@@ -15,6 +15,14 @@ export type {
   FetchPage,
   PageRequest,
 } from "./cursor-pager"
+export { createInfiniteList, virtualWindow } from "./infinite-list"
+export type {
+  InfiniteListController,
+  InfiniteListOptions,
+  InfiniteListState,
+  VirtualWindow,
+  VirtualWindowInput,
+} from "./infinite-list"
 export { createMemorySource } from "./memory-source"
 export type { MemorySource, MemorySourceOptions } from "./memory-source"
 // 列定義を組み立てるヘルパーは table-core のものをそのまま再公開する。

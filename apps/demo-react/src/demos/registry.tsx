@@ -1,6 +1,8 @@
 import type { ReactNode } from "react"
 import { EmployeesDemo } from "./EmployeesDemo"
 import { CardDemo } from "./CardDemo"
+import { TableBasicsDemo } from "./TableBasicsDemo"
+import { InfiniteScrollDemo } from "./InfiniteScrollDemo"
 import { DialogDemo } from "./DialogDemo"
 import { TextboxDemo } from "./form/TextboxDemo"
 import { SelectDemo } from "./form/SelectDemo"
@@ -57,12 +59,14 @@ export const tabs: DemoTab[] = [
     slug: "table",
     label: "📊 テーブル",
     children: [
+      { slug: "table-basics", label: "🧮 テーブルの基本", render: () => <TableBasicsDemo /> },
       { slug: "datatable", label: "📊 データテーブル", render: () => <EmployeesDemo /> },
       {
         slug: "server-pagination",
         label: "🗄️ サーバページネーション",
         render: () => <ServerPaginationDemo />,
       },
+      { slug: "infinite", label: "♾️ 無限スクロール", render: () => <InfiniteScrollDemo /> },
     ],
   },
   { slug: "effects", label: "✨ 演出", children: effectDemos },

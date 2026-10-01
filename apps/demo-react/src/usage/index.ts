@@ -4,6 +4,9 @@ import type { UsageBlock } from "@hc/demo-data"
 import dialogBasic from "./dialog/basic.tsx?raw"
 import dialogDemo from "../demos/DialogDemo.tsx?raw"
 import cardDemo from "../demos/CardDemo.tsx?raw"
+import infComponent from "./infinite/component.tsx?raw"
+import infHeadless from "./infinite/headless.tsx?raw"
+import tableBasicsDemo from "../demos/TableBasicsDemo.tsx?raw"
 import formBasic from "./form/basic.tsx?raw"
 import formRules from "./form/rules.ts?raw"
 import selectDemo from "../demos/form/SelectDemo.tsx?raw"
@@ -71,6 +74,31 @@ const FORM_SHELL: UsageBlock = {
 const csvTitle = (b: UsageBlock): UsageBlock => ({ ...b, title: `CSV / TSV ${b.title}` })
 
 export const usageBySlug: Record<string, UsageBlock[]> = {
+  infinite: [
+    {
+      title: "1. 完成品のテーブルで使う",
+      note: "fetchPage はサーバーページネーションと同じ形。行の高さを一定にし、列幅は meta.width で固定する。",
+      lang: "tsx",
+      file: "AllEmployees.tsx",
+      code: infComponent,
+    },
+    {
+      title: "2. 自前のリストに付ける",
+      note: "読み込みは useInfiniteList、描く範囲は virtualWindow (見えている行 ± 8 行と、上下の詰め物の高さを返す)。表でなくても使える。",
+      lang: "tsx",
+      file: "MessageList.tsx",
+      code: infHeadless,
+    },
+  ],
+  "table-basics": [
+    {
+      title: "このページのソース",
+      note: "選択は enableRowSelection、展開は getRowCanExpand を渡すだけ。状態 (rowSelection / expanded) は useDataTable が持つ。まとめて削除は createDialogs で確かめる。",
+      lang: "tsx",
+      file: "TableBasicsDemo.tsx",
+      code: tableBasicsDemo,
+    },
+  ],
   dialog: [
     {
       title: "1. 置き方と開き方",

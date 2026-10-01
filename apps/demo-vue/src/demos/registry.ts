@@ -1,6 +1,8 @@
 import type { Component } from "vue"
 import EmployeesDemo from "./EmployeesDemo.vue"
 import CardDemo from "./CardDemo.vue"
+import TableBasicsDemo from "./TableBasicsDemo.vue"
+import InfiniteScrollDemo from "./InfiniteScrollDemo.vue"
 import DialogDemo from "./DialogDemo.vue"
 import TextboxDemo from "./form/TextboxDemo.vue"
 import SelectDemo from "./form/SelectDemo.vue"
@@ -54,12 +56,14 @@ export const tabs: DemoTab[] = [
     slug: "table",
     label: "📊 テーブル",
     children: [
+      { slug: "table-basics", label: "🧮 テーブルの基本", component: TableBasicsDemo },
       { slug: "datatable", label: "📊 データテーブル", component: EmployeesDemo },
       {
         slug: "server-pagination",
         label: "🗄️ サーバページネーション",
         component: ServerPaginationDemo,
       },
+      { slug: "infinite", label: "♾️ 無限スクロール", component: InfiniteScrollDemo },
     ],
   },
   { slug: "effects", label: "✨ 演出", children: effectDemos },

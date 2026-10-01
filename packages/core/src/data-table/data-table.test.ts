@@ -134,3 +134,22 @@ describe("フリーワード検索", () => {
     expect(names("   ")).toHaveLength(3)
   })
 })
+
+describe("行の選択と展開", () => {
+  it("enableRowSelection で選べ、全選択は検索で絞った行にだけ効く", () => {
+    const t = createDataTable({
+      data: items,
+      columns,
+      getRowId: (x) => x.id,
+      enableRowSelection: true,
+      getRowCanExpand: () => true,
+    })
+    t.table.getRow("id01").toggleSelected(true)
+    expect(t.get().state.rowSelection).toEqual({ id01: true })
+    t.setGlobalFilter("Alice")
+    t.table.toggleAllRowsSelected(true)
+    expect(Object.keys(t.get().state.rowSelection)).toHaveLength(12)
+    t.table.getRow("id02").toggleExpanded()
+    expect(t.get().state.expanded).toEqual({ id02: true })
+  })
+})

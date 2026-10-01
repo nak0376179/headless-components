@@ -193,3 +193,52 @@ export function createEmployeeDirectory(source: MemorySource<Employee>): Employe
     },
   }
 }
+
+const FAMILY = [
+  "佐藤",
+  "鈴木",
+  "高橋",
+  "田中",
+  "伊藤",
+  "渡辺",
+  "山本",
+  "中村",
+  "小林",
+  "加藤",
+  "吉田",
+  "山田",
+]
+const GIVEN = ["陽菜", "蓮", "結衣", "湊", "葵", "大翔", "凛", "悠真", "紬", "樹", "咲", "陸"]
+
+/**
+ * 無限スクロールのデモ用に、決まった並びで大量の従業員を作る (乱数を使わないので毎回同じ)。
+ * 番号は 1 始まり、メールは member00001@… の形。
+ */
+export function generateEmployees(count: number): Employee[] {
+  const statuses: Status[] = ["active", "active", "active", "onLeave", "retired"]
+  return Array.from({ length: count }, (_, i) => {
+    const n = i + 1
+    const year = 2000 + (n % 26)
+    const month = String((n % 12) + 1).padStart(2, "0")
+    const day = String((n % 28) + 1).padStart(2, "0")
+    return {
+      email: `member${String(n).padStart(5, "0")}@example.com`,
+      name: `${FAMILY[n % FAMILY.length]} ${GIVEN[(n * 7) % GIVEN.length]}`,
+      department: DEPARTMENTS[n % DEPARTMENTS.length],
+      role: ROLES[(n * 3) % ROLES.length],
+      status: statuses[(n * 5) % statuses.length],
+      joinedAt: `${year}-${month}-${day}`,
+      salary: 3000000 + ((n * 7919) % 90) * 100000,
+    }
+  })
+}
+
+/** 大量の従業員を返す模擬 API (無限スクロールのデモ用)。 */
+export function createLargeEmployeeSource(count = 10000, latencyMs = 300): MemorySource<Employee> {
+  return createMemorySource({
+    items: generateEmployees(count),
+    getKey: (e) => e.email,
+    matches,
+    latencyMs,
+  })
+}

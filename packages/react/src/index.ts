@@ -13,10 +13,12 @@ import {
   createCursorPager,
   createDataTable,
   createForm,
+  createInfiniteList,
   type CsvJsonOptions,
   type CursorPagerOptions,
   type DataTableOptions,
   type FormOptions,
+  type InfiniteListOptions,
   type ReadableStore,
 } from "@hc/core"
 
@@ -81,6 +83,14 @@ export function useDataTable<T>(options: DataTableOptions<T>) {
   useLayoutEffect(() => controller.setColumns(options.columns), [controller, options.columns])
   const state = useStore(controller)
   return { table: controller.table, state, controller }
+}
+
+/** 無限スクロールの読み込み。アンマウントで検索のタイマーを止める。 */
+export function useInfiniteList<T>(options: InfiniteListOptions<T>) {
+  const controller = useController(() => createInfiniteList(options))
+  useEffect(() => () => controller.destroy(), [controller])
+  const state = useStore(controller)
+  return { state, controller }
 }
 
 export function useCursorPager<T>(options: CursorPagerOptions<T>) {

@@ -11,6 +11,8 @@ declare module "@tanstack/table-core" {
   interface ColumnMeta<TData extends RowData, TValue> {
     /** フリーワード検索で使う文字。省略時は値を文字列にしたもの。 */
     searchText?: (value: TValue, row: TData) => string
+    /** 列の幅 (px か CSS の長さ)。行を間引いて描くテーブル (InfiniteTable) で幅を固定するのに使う。 */
+    width?: number | string
   }
 }
 

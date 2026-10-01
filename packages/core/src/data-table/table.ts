@@ -7,6 +7,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   type ColumnDef,
+  type Row,
   type Table,
   type TableOptionsResolved,
   type TableState,
@@ -28,6 +29,10 @@ export interface DataTableOptions<T> {
    * そのまま描く用。列定義と描画だけを共用したいとき)。
    */
   manual?: boolean
+  /** 行の選択を有効にする (状態は state.rowSelection)。関数なら行ごとに選べるかを決める。 */
+  enableRowSelection?: boolean | ((row: Row<T>) => boolean)
+  /** 行を開いて詳細を見せられるか (状態は state.expanded。詳細の中身は描く側が決める)。 */
+  getRowCanExpand?: (row: Row<T>) => boolean
 }
 
 export interface DataTableSnapshot<T> {
@@ -71,6 +76,8 @@ export function createDataTable<T>(options: DataTableOptions<T>): DataTableContr
     manualSorting: options.manual,
     manualFiltering: options.manual,
     enableSorting: !options.manual,
+    enableRowSelection: options.enableRowSelection ?? false,
+    getRowCanExpand: options.getRowCanExpand,
     initialState: { pagination: { pageIndex: 0, pageSize: options.initialPageSize ?? 10 } },
   }
   const table = createTable<T>(resolved)
