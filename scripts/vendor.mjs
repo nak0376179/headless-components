@@ -1,20 +1,20 @@
 #!/usr/bin/env node
-// このライブラリをアプリの src/libs/<name>/ に丸ごと取り込む (vendoring)。
+// core と部品をアプリにコピーして取り込む (vendoring)。npm には出していないので、これで配る。
 //
-//   pnpm vendor <アプリのディレクトリ> --ui mui          # React + MUI のアプリ
-//   pnpm vendor <アプリのディレクトリ> --ui vuetify      # Vue + Vuetify のアプリ
-//   pnpm vendor <アプリのディレクトリ> --check           # 取り込んだ後に手で書き換えられていないか
+//   pnpm vendor <アプリのディレクトリ> --ui react       # React + MUI のアプリ
+//   pnpm vendor <アプリのディレクトリ> --ui nuxt        # Nuxt (Vue) + Vuetify のアプリ
+//   pnpm vendor <アプリのディレクトリ> --check          # 取り込んだ後に手で書き換えられていないか
+//   --dry-run   書き込まずに何をするかだけ表示
 //
-//   --name ui-kit      取り込み先のフォルダ名 (既定 ui-kit → src/libs/ui-kit/)
-//   --dest src/libs    取り込み先の親 (アプリのディレクトリからの相対)
-//   --dry-run          書き込まずに何をするかだけ表示
-//
-// 取り込み先の構成は packages/ と同じ (core / react / mui または core / vue / vuetify)。
-// 中の `@hc/*` の import は相対パスに書き換えるので、アプリ側に別名の設定は要らない。
-// アプリからは `@/libs/ui-kit/mui` のように使う。
-// **取り込んだ中身は編集しない** (直すならこのリポジトリを直して取り込み直す)。
-// 取り込み直しは前回の分を消して入れ替える。前回の取り込み記録 (.vendored.json) が無い
-// フォルダは、アプリのコードの可能性があるので上書きしない。
+// このリポジトリと同じ場所に置く:
+//   core/src/            → <アプリ>/src/core/
+//   react/src/components → <アプリ>/src/components/   (nuxt なら nuxt/src/components)
+//   react/src/hooks      → <アプリ>/src/hooks/        (nuxt なら nuxt/src/composables)
+// 部品の import は `@core/...` と `@/hooks/...` のままなので、アプリに別名 `@core` → src/core と
+// `@` → src を張る (Nuxt は `@` が最初からある)。足りなければ表示する。
+// **取り込んだファイルは編集しない** (直すならこのリポジトリを直して取り込み直す)。
+// 取り込み直しは前回の分を消して入れ替える。取り込み記録 (src/core/.vendored.json) に無い同名ファイル
+// (アプリのコード) があれば上書きせず中止する。
 import { createHash } from "node:crypto"
 import { execFileSync } from "node:child_process"
 import fs from "node:fs"
@@ -22,35 +22,44 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
-const MANIFEST = ".vendored.json"
-const UI_LAYERS = { mui: ["core", "react", "mui"], vuetify: ["core", "vue", "vuetify"] }
-const SKIP = (rel) => /\.test\.[tj]sx?$/.test(rel) || rel === "env.d.ts"
+const MANIFEST = "core/.vendored.json" // アプリの src/ からの相対
+const README = "core/VENDORED.md"
+/** 取り込む元 (リポジトリの相対) → アプリの src/ の中の置き場所。 */
+const LAYOUTS = {
+  react: [
+    ["core/src", "core"],
+    ["react/src/components", "components"],
+    ["react/src/hooks", "hooks"],
+  ],
+  nuxt: [
+    ["core/src", "core"],
+    ["nuxt/src/components", "components"],
+    ["nuxt/src/composables", "composables"],
+  ],
+}
+const UI_ALIASES = { mui: "react", vuetify: "nuxt", vue: "nuxt" }
+/** デモにしか使っていない依存 (取り込み先には要らない)。 */
+const DEMO_ONLY = new Set(["react-router", "nuxt", "vue-router"])
+const SKIP = (rel) => /\.test\.[tj]sx?$/.test(rel)
 
 function parseArgs(argv) {
-  const opts = {
-    name: "ui-kit",
-    dest: "src/libs",
-    ui: null,
-    check: false,
-    dryRun: false,
-    app: null,
-  }
+  const opts = { ui: null, check: false, dryRun: false, app: null }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     if (a === "--ui") opts.ui = argv[++i]
-    else if (a === "--name") opts.name = argv[++i]
-    else if (a === "--dest") opts.dest = argv[++i]
     else if (a === "--check") opts.check = true
     else if (a === "--dry-run") opts.dryRun = true
     else if (a === "-h" || a === "--help") opts.help = true
     else if (!a.startsWith("-") && !opts.app) opts.app = a
     else throw new Error(`不明な引数: ${a}`)
   }
+  opts.ui = UI_ALIASES[opts.ui] ?? opts.ui
   return opts
 }
 
 const sha = (buf) => createHash("sha256").update(buf).digest("hex").slice(0, 16)
 const posix = (p) => p.split(path.sep).join("/")
+const readJson = (p) => JSON.parse(fs.readFileSync(p, "utf8"))
 
 function walk(dir, base = dir) {
   const out = []
@@ -62,18 +71,6 @@ function walk(dir, base = dir) {
   return out.sort()
 }
 
-/** `@hc/<layer>` をファイル位置からの相対パスに書き換える。 */
-function rewriteImports(text, fileRelInTarget, layers) {
-  return text.replace(/(["'])@hc\/([a-z-]+)\1/g, (m, q, pkg) => {
-    if (!layers.includes(pkg)) {
-      throw new Error(`${fileRelInTarget}: 取り込まない層 @hc/${pkg} を参照している`)
-    }
-    let rel = posix(path.relative(path.dirname(fileRelInTarget), pkg))
-    if (!rel.startsWith(".")) rel = `./${rel}`
-    return `${q}${rel}${q}`
-  })
-}
-
 function git(args) {
   try {
     return execFileSync("git", args, { cwd: ROOT, encoding: "utf8" }).trim()
@@ -82,30 +79,23 @@ function git(args) {
   }
 }
 
-/** 取り込む層が使う外部パッケージ (@hc/* を除く) と、アプリに無いもの。 */
-function missingDeps(layers, appDir) {
+/** 部品と core が使う外部パッケージのうち、アプリに無いもの。 */
+function missingDeps(ui, appDir) {
   const need = new Map()
-  for (const layer of layers) {
-    const pkg = JSON.parse(
-      fs.readFileSync(path.join(ROOT, "packages", layer, "package.json"), "utf8"),
-    )
-    for (const [name, version] of Object.entries({
-      ...pkg.dependencies,
-      ...pkg.peerDependencies,
-    })) {
-      if (!name.startsWith("@hc/")) need.set(name, { name, version, dev: false })
+  for (const pkgPath of ["core/package.json", `${ui}/package.json`]) {
+    for (const [name, version] of Object.entries(readJson(path.join(ROOT, pkgPath)).dependencies)) {
+      if (!DEMO_ONLY.has(name)) need.set(name, { name, version, dev: false })
     }
   }
   // 型定義が別パッケージのもの (バージョンはルートの package.json に合わせる)
-  const rootPkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8"))
+  const rootPkg = readJson(path.join(ROOT, "package.json"))
   for (const name of [...need.keys()]) {
-    const types = `@types/${name}`
-    const version = rootPkg.devDependencies?.[types]
-    if (version) need.set(types, { name: types, version, dev: true })
+    const version = rootPkg.devDependencies?.[`@types/${name}`]
+    if (version) need.set(`@types/${name}`, { name: `@types/${name}`, version, dev: true })
   }
   let have = {}
   try {
-    const app = JSON.parse(fs.readFileSync(path.join(appDir, "package.json"), "utf8"))
+    const app = readJson(path.join(appDir, "package.json"))
     have = { ...app.dependencies, ...app.devDependencies }
   } catch {
     // package.json が無ければ全部足りない扱い
@@ -113,19 +103,66 @@ function missingDeps(layers, appDir) {
   return [...need.values()].filter((d) => !(d.name in have))
 }
 
-function check(target) {
-  const manifestPath = path.join(target, MANIFEST)
-  if (!fs.existsSync(manifestPath)) throw new Error(`${target} に取り込み記録 (${MANIFEST}) が無い`)
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"))
-  const now = new Set(walk(target).filter((f) => f !== MANIFEST && f !== "VENDORED.md"))
+/** アプリの設定に `@core` の別名があるか (無ければ足し方を表示する)。 */
+function aliasHints(ui, appDir, srcName) {
+  const read = (f) => {
+    try {
+      return fs.readFileSync(path.join(appDir, f), "utf8")
+    } catch {
+      return ""
+    }
+  }
+  const hints = []
+  if (ui === "nuxt") {
+    const conf = read("nuxt.config.ts")
+    if (!conf.includes("@core")) {
+      hints.push(
+        "nuxt.config.ts に別名を足す (tsconfig は Nuxt が作る):",
+        `  alias: { "@core": fileURLToPath(new URL("./${srcName}/core", import.meta.url)) },`,
+      )
+    }
+    if (!conf.includes("typeof window")) {
+      hints.push(
+        "nuxt.config.ts に足す (Nitro が papaparse の文字列中の typeof window を置き換えて壊すため):",
+        '  nitro: { replace: { "typeof window": "typeof window" } },',
+      )
+    }
+  } else {
+    const vite = read("vite.config.ts") + read("vite.config.js")
+    const ts = read("tsconfig.app.json") + read("tsconfig.json")
+    if (!vite.includes("@core")) {
+      hints.push(
+        "vite.config.ts に別名を足す:",
+        '  resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)), "@core": fileURLToPath(new URL("./src/core", import.meta.url)) } },',
+      )
+    }
+    if (!ts.includes("@core")) {
+      hints.push(
+        "tsconfig (compilerOptions) に paths を足す:",
+        '  "paths": { "@/*": ["./src/*"], "@core": ["./src/core"], "@core/*": ["./src/core/*"] }',
+      )
+    }
+  }
+  return hints
+}
+
+/** 前回の取り込み記録と今のファイルを比べ、手を加えられたものを返す。 */
+function changedSince(src, manifest) {
   const changed = []
   for (const [rel, hash] of Object.entries(manifest.files)) {
-    if (!now.has(rel)) changed.push(`削除  ${rel}`)
-    else if (sha(fs.readFileSync(path.join(target, rel))) !== hash) changed.push(`変更  ${rel}`)
-    now.delete(rel)
+    const full = path.join(src, rel)
+    if (!fs.existsSync(full)) changed.push(`削除  ${rel}`)
+    else if (sha(fs.readFileSync(full)) !== hash) changed.push(`変更  ${rel}`)
   }
-  for (const rel of now) changed.push(`追加  ${rel}`)
-  console.log(`取り込み元: ${manifest.source.commit} (${manifest.vendoredAt})`)
+  return changed
+}
+
+function check(src) {
+  const manifestPath = path.join(src, MANIFEST)
+  if (!fs.existsSync(manifestPath)) throw new Error(`取り込み記録 (src/${MANIFEST}) が無い`)
+  const manifest = readJson(manifestPath)
+  const changed = changedSince(src, manifest)
+  console.log(`取り込み元: ${manifest.source.commit} (${manifest.vendoredAt}, --ui ${manifest.ui})`)
   if (changed.length === 0) {
     console.log("手を加えられたファイルは無い")
     return 0
@@ -135,38 +172,40 @@ function check(target) {
   return 1
 }
 
-function vendor(opts, appDir, target) {
-  const layers = UI_LAYERS[opts.ui]
-  if (!layers) throw new Error("--ui mui または --ui vuetify を指定する")
-
-  if (fs.existsSync(target)) {
-    if (!fs.existsSync(path.join(target, MANIFEST))) {
-      throw new Error(
-        `${target} は既にあり、取り込み記録 (${MANIFEST}) が無い。アプリのコードかもしれないので上書きしない`,
-      )
-    }
-    if (check(target) !== 0) {
-      throw new Error("取り込んだ中身が手で書き換えられている。消えてしまうので中止する")
-    }
-  }
+function vendor(opts, appDir, src) {
+  const layout = LAYOUTS[opts.ui]
+  if (!layout) throw new Error("--ui react または --ui nuxt を指定する")
 
   // 書き込む内容を先に全部作る (途中で失敗して半端に書かないように)
   const files = new Map()
-  for (const layer of layers) {
-    const src = path.join(ROOT, "packages", layer, "src")
-    for (const rel of walk(src)) {
-      if (SKIP(rel)) continue
-      const relInTarget = `${layer}/${rel}`
-      let buf = fs.readFileSync(path.join(src, rel))
-      if (/\.(ts|tsx|vue)$/.test(rel)) {
-        buf = Buffer.from(rewriteImports(buf.toString("utf8"), relInTarget, layers), "utf8")
-      }
-      files.set(relInTarget, buf)
+  for (const [from, to] of layout) {
+    const dir = path.join(ROOT, from)
+    for (const rel of walk(dir)) {
+      if (!SKIP(rel)) files.set(`${to}/${rel}`, fs.readFileSync(path.join(dir, rel)))
     }
   }
 
+  const manifestPath = path.join(src, MANIFEST)
+  const previous = fs.existsSync(manifestPath) ? readJson(manifestPath) : null
+  if (previous) {
+    const changed = changedSince(src, previous)
+    if (changed.length) {
+      for (const c of changed) console.log(`  ${c}`)
+      throw new Error("取り込んだファイルが手で書き換えられている。消えてしまうので中止する")
+    }
+  }
+  // アプリのファイルと同じ名前なら上書きしない
+  const clash = [...files.keys()].filter(
+    (rel) => fs.existsSync(path.join(src, rel)) && !(previous && rel in previous.files),
+  )
+  if (clash.length) {
+    for (const rel of clash) console.log(`  ${path.basename(src)}/${rel}`)
+    throw new Error("取り込み記録に無い同名のファイル (アプリのコード) があるので上書きしない")
+  }
+
   const commit = git(["rev-parse", "--short", "HEAD"]) || "unknown"
-  const dirty = git(["status", "--porcelain", "--", "packages"]) !== ""
+  const sources = layout.map(([from]) => from.split("/")[0])
+  const dirty = git(["status", "--porcelain", "--", ...new Set(sources)]) !== ""
   const now = new Date()
   const pad = (n) => String(n).padStart(2, "0")
   const vendoredAt = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${now.toTimeString().slice(0, 8)}`
@@ -174,47 +213,59 @@ function vendor(opts, appDir, target) {
     source: { repo: "https://github.com/nak0376179/headless-components", commit, dirty },
     vendoredAt,
     ui: opts.ui,
-    layers,
     files: Object.fromEntries([...files].map(([rel, buf]) => [rel, sha(buf)])),
   }
-  const importBase = posix(path.join(opts.dest.replace(/^src\/?/, "@/"), opts.name))
+  const hooksDir = opts.ui === "nuxt" ? "composables" : "hooks"
+  const example =
+    opts.ui === "nuxt"
+      ? [
+          'import DataTable from "@/components/DataTable.vue"',
+          'import { useCsvJson } from "@/composables/useCsvJson"   // 見た目を自作するとき',
+        ]
+      : [
+          'import { DataTable } from "@/components/DataTable"',
+          'import { useCsvJson } from "@/hooks/useCsvJson"   // 見た目を自作するとき',
+        ]
   const readme = [
-    `# ${opts.name}`,
+    "# core (headless-components から取り込んだもの)",
     "",
-    `[headless-components](${manifest.source.repo}) を取り込んだもの (commit \`${commit}\`${dirty ? "・未コミットの変更あり" : ""}、${vendoredAt.slice(0, 10)})。`,
+    `[headless-components](${manifest.source.repo}) の core と部品を取り込んだもの (commit \`${commit}\`${dirty ? "・未コミットの変更あり" : ""}、${vendoredAt.slice(0, 10)})。`,
+    `取り込んだのは src/core/ と、src/components/・src/${hooksDir}/ のうち \`.vendored.json\` に載っているファイル。`,
     "",
-    "**このフォルダの中は編集しない。** 直したいときはライブラリ本体を直して取り込み直す:",
+    "**取り込んだファイルは編集しない。** 直したいときはライブラリ本体を直して取り込み直す:",
     "",
     "```bash",
-    `cd <headless-components> && pnpm vendor <このアプリ> --ui ${opts.ui} --name ${opts.name}`,
-    `pnpm vendor <このアプリ> --name ${opts.name} --check   # 手で書き換えていないかの確認`,
+    `cd <headless-components> && pnpm vendor <このアプリ> --ui ${opts.ui}`,
+    "pnpm vendor <このアプリ> --check   # 手で書き換えていないかの確認",
     "```",
     "",
-    "アプリ固有の見た目や既定値は、このフォルダの外 (src/components/ など) で包み直す。",
+    "アプリ固有の見た目や既定値は、別のファイルで包み直す。",
     "",
     "```ts",
-    `import { DataTable, CsvJsonTextArea } from "${importBase}/${layers[2]}"`,
-    `import { email, type ColumnSpec } from "${importBase}/core"`,
-    `import { useCsvJson } from "${importBase}/${layers[1]}"   // 見た目を自作するとき`,
+    'import { email, type ColumnSpec } from "@core"',
+    ...example,
     "```",
     "",
   ].join("\n")
 
-  const missing = missingDeps(layers, appDir)
+  const missing = missingDeps(opts.ui, appDir)
+  const hints = aliasHints(opts.ui, appDir, path.basename(src))
   console.log(
-    `取り込み先: ${target}  (${layers.join(" / ")}, ${files.size} ファイル, commit ${commit}${dirty ? " +未コミット" : ""})`,
+    `取り込み先: ${src}  (--ui ${opts.ui}, ${files.size} ファイル, commit ${commit}${dirty ? " +未コミット" : ""})`,
   )
   if (opts.dryRun) {
-    for (const rel of files.keys()) console.log(`  ${rel}`)
+    for (const rel of files.keys()) console.log(`  ${path.basename(src)}/${rel}`)
   } else {
-    fs.rmSync(target, { recursive: true, force: true })
+    for (const rel of Object.keys(previous?.files ?? {})) {
+      fs.rmSync(path.join(src, rel), { force: true }) // 前回の分 (今回無くなったものも消える)
+    }
     for (const [rel, buf] of files) {
-      const out = path.join(target, rel)
+      const out = path.join(src, rel)
       fs.mkdirSync(path.dirname(out), { recursive: true })
       fs.writeFileSync(out, buf)
     }
-    fs.writeFileSync(path.join(target, MANIFEST), JSON.stringify(manifest, null, 2) + "\n")
-    fs.writeFileSync(path.join(target, "VENDORED.md"), readme)
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n")
+    fs.writeFileSync(path.join(src, README), readme)
     console.log("完了")
   }
   if (missing.length) {
@@ -226,8 +277,8 @@ function vendor(opts, appDir, target) {
     if (prod.length) console.log(`  pnpm add ${spec(prod)}`)
     if (dev.length) console.log(`  pnpm add -D ${spec(dev)}`)
   }
-  console.log(`\n使い方: import { DataTable } from "${importBase}/${layers[2]}"`)
-  if (dirty) console.log("注意: packages/ に未コミットの変更がある状態で取り込んだ")
+  if (hints.length) console.log(`\n${hints.join("\n")}`)
+  if (dirty) console.log("\n注意: 未コミットの変更がある状態で取り込んだ")
   return 0
 }
 
@@ -238,7 +289,7 @@ function main() {
       fs
         .readFileSync(fileURLToPath(import.meta.url), "utf8")
         .split("\n")
-        .slice(1, 17)
+        .slice(1, 18)
         .join("\n"),
     )
     return opts.help ? 0 : 1
@@ -246,8 +297,10 @@ function main() {
   // pnpm vendor で呼ばれたときは、pnpm を実行した場所 (INIT_CWD) を基準にする
   const appDir = path.resolve(process.env.INIT_CWD ?? process.cwd(), opts.app)
   if (!fs.existsSync(appDir)) throw new Error(`アプリのディレクトリが無い: ${appDir}`)
-  const target = path.join(appDir, opts.dest, opts.name)
-  return opts.check ? check(target) : vendor(opts, appDir, target)
+  // Nuxt 4 の既定の srcDir は app/。src/ があればそちら
+  const srcName = ["src", "app"].find((d) => fs.existsSync(path.join(appDir, d))) ?? "src"
+  const src = path.join(appDir, srcName)
+  return opts.check ? check(src) : vendor(opts, appDir, src)
 }
 
 try {

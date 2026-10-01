@@ -1,5 +1,5 @@
 // 演出系のデモで包む、偽の「実ページ」(本物らしいダッシュボード)。効果に題材を与えるためのもの。
-// 中身と CSS は @demo-data にあり、Vue 版 (DemoPage.vue) と同じ見た目になる。
+// 中身と CSS は @demo-data にあり、Nuxt 版 (DemoPage.vue) と同じ見た目になる。
 import {
   DASH_ACTIVITY,
   DASH_DONUT,

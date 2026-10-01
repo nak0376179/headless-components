@@ -12,7 +12,8 @@ const rowId = (e: Employee) => e.email
   <p class="text-body-2 text-medium-emphasis mb-2">
     「次へ」で nextCursor
     を渡して次のページを取りに行き、「前へ」は訪れたページのカーソルを積んでおいて戻る (DynamoDB の
-    LastEvaluatedKey と同じ方式)。応答は 400ms 遅らせてある。
+    LastEvaluatedKey と同じ方式)。応答は 400ms 遅らせてある。読んだページは TanStack Query
+    がキャッシュするので、「前へ」・一度見たページ・前の検索語は待たずに出る。
   </p>
   <CursorTable
     :fetch-page="source.fetchPage"

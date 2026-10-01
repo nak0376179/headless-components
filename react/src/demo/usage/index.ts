@@ -33,14 +33,14 @@ import fxPixelate from "./effects/pixelate.tsx?raw"
 /** アプリへの取り込み (どのページにも出す)。 */
 export const VENDOR_BLOCK: UsageBlock = {
   title: "アプリへ取り込む",
-  note: "npm には出していないので、使うアプリへソースごとコピーする。取り込んだ後は import の `@hc/mui` を `@/libs/ui-kit/mui` (`@core` は `@/libs/ui-kit/core`) に読み替える。",
+  note: "npm には出していないので、使うアプリへソースごとコピーする。このリポジトリと同じ場所 (src/core・src/components・src/hooks) に入るので、上のコード例の import はそのまま使える。アプリには別名 `@core` → src/core を張る (足りない設定は表示される)。",
   lang: "sh",
   code: [
-    "# このリポジトリで実行する (取り込み先: <アプリ>/src/libs/ui-kit/)",
-    "pnpm vendor ../my-app --ui mui",
+    "# このリポジトリで実行する",
+    "pnpm vendor ../my-app --ui react",
     "",
-    "# 足りない依存 (papaparse・@tanstack/table-core など) が表示されたらアプリに入れる",
-    "# 取り込んだ中身は編集しない。直すならこのリポジトリを直して取り込み直す",
+    "# 足りない依存 (papaparse・@tanstack/table-core・@tanstack/react-query など) と別名の設定が表示されたら足す",
+    "# 取り込んだファイルは編集しない。直すならこのリポジトリを直して取り込み直す",
     "pnpm vendor ../my-app --check",
   ].join("\n"),
 }

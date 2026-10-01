@@ -1,5 +1,5 @@
 // フレームワーク非依存の最小ストア。コアのコントローラは状態をこれで公開し、
-// React は useSyncExternalStore、Vue は shallowRef で購読する (@hc/react / @hc/vue の useStore)。
+// React は useSyncExternalStore、Vue は shallowRef で購読する (react/src/hooks・nuxt/src/composables の useStore)。
 // スナップショットは不変オブジェクトとして扱い、変更のたびに新しいオブジェクトに置き換える。
 
 export type Listener = () => void
