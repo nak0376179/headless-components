@@ -1,6 +1,0 @@
-export * from "./employees"
-export * from "./csvSamples"
-export * from "./demoPage"
-export * from "./highlight"
-export * from "./prefectures"
-export * from "./cards"

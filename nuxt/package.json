@@ -1,0 +1,21 @@
+{
+  "name": "hc-nuxt",
+  "private": true,
+  "type": "module",
+  "description": "Nuxt + Vuetify 版 (components = Vuetify で包んだ部品 / composables = core を Vue で使う composable / pages = デモ)",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "@tanstack/table-core": "^8.21.3",
+    "nuxt": "^4.5.2",
+    "papaparse": "^5.5.4",
+    "vue": "^3.5.43",
+    "vuetify": "^4.2.3"
+  }
+}

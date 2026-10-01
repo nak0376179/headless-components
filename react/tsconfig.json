@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@core": ["../core/src"],
+      "@core/*": ["../core/src/*"],
+      "@demo-data": ["../demo-data/src"]
+    }
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@hc/demo-data",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "デモ用のデータと画面一覧 (従業員のブラウザ内 API・CSV サンプル・nav)。React / Nuxt 両デモで共用 (@demo-data で参照)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

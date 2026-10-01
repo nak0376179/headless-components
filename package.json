@@ -4,8 +4,8 @@
   "type": "module",
   "packageManager": "pnpm@11.11.0",
   "scripts": {
-    "dev:react": "pnpm --filter demo-react dev",
-    "dev:vue": "pnpm --filter demo-vue dev",
+    "dev:react": "pnpm --filter hc-react dev",
+    "dev:nuxt": "pnpm --filter hc-nuxt dev",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "pnpm -r typecheck",

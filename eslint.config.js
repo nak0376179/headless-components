@@ -6,7 +6,7 @@ import pluginVue from "eslint-plugin-vue"
 import reactHooks from "eslint-plugin-react-hooks"
 
 export default tseslint.config(
-  { ignores: ["**/dist", "**/node_modules"] },
+  { ignores: ["**/dist", "**/node_modules", "**/.nuxt", "**/.output"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
@@ -15,9 +15,9 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
     },
   },
-  // React のフックの規則は React 側のパッケージだけに掛ける。
+  // React のフックの規則は React 版だけに掛ける。
   {
-    files: ["packages/react/**/*.{ts,tsx}", "packages/mui/**/*.tsx", "apps/demo-react/**/*.tsx"],
+    files: ["react/**/*.{ts,tsx}"],
     plugins: { "react-hooks": reactHooks },
     rules: reactHooks.configs.recommended.rules,
   },
@@ -26,16 +26,32 @@ export default tseslint.config(
   {
     files: ["**/*.vue"],
     languageOptions: { globals: globals.browser, parserOptions: { parser: tseslint.parser } },
-    // コンポーネント名は MUI 版とそろえる (Pixelate のように 1 語のものがある)。
+    // コンポーネント名は MUI 版とそろえる (Pixelate のように 1 語のものがある)。Nuxt のページ名も 1 語。
     rules: { "vue/multi-word-component-names": "off" },
   },
-  // コアはフレームワーク非依存を保つ。
+  // core はフレームワーク非依存を保つ。
   {
-    files: ["packages/core/**/*.ts"],
+    files: ["core/**/*.ts"],
     rules: {
       "no-restricted-imports": [
         "error",
-        { patterns: ["react", "react-*", "vue", "vuetify", "@mui/*", "@hc/react", "@hc/vue"] },
+        { patterns: ["react", "react-*", "vue", "vuetify", "@mui/*", "nuxt", "#*", "@/*"] },
+      ],
+    },
+  },
+  // 部品 (取り込み対象) はデモ専用のコード・データを参照しない (vendor でコピーした先に無い)。
+  {
+    files: [
+      "react/src/components/**/*.{ts,tsx}",
+      "react/src/hooks/**/*.ts",
+      "nuxt/src/components/**/*.{ts,vue}",
+      "nuxt/src/composables/**/*.ts",
+    ],
+    ignores: ["**/*.test.*"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        { patterns: ["@demo-data", "@/demo/*", "@/pages/*", "@/layouts/*", "#imports", "#app"] },
       ],
     },
   },

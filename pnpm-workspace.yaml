@@ -1,5 +1,7 @@
 packages:
-  - packages/*
-  - apps/*
+  - core
+  - demo-data
+  - react
+  - nuxt
 allowBuilds:
   esbuild: true
