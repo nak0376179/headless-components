@@ -15,13 +15,11 @@ import {
 } from "@mui/material"
 import DarkModeIcon from "@mui/icons-material/DarkMode"
 import LightModeIcon from "@mui/icons-material/LightMode"
-import { demos } from "./demos/registry"
+import { resolveSlug, tabs } from "./demos/registry"
 
 // ルーターは使わず #slug で切り替える (Vue 版と同じ URL で同じデモが開く)。
-const currentSlug = () => {
-  const slug = location.hash.slice(1)
-  return demos.some((d) => d.slug === slug) ? slug : demos[0].slug
-}
+// 上位タブの slug (#effects) や知らない slug は resolveSlug が開くデモを決める。
+const currentSlug = () => resolveSlug(location.hash.slice(1)).demo.slug
 
 export function App() {
   const [slug, setSlug] = useState(currentSlug)
@@ -29,7 +27,7 @@ export function App() {
     matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
   )
   const theme = useMemo(() => createTheme({ palette: { mode } }), [mode])
-  const demo = demos.find((d) => d.slug === slug)!
+  const { tab, demo } = resolveSlug(slug)
 
   useEffect(() => {
     const onHash = () => setSlug(currentSlug())
@@ -61,16 +59,29 @@ export function App() {
           </IconButton>
         </Toolbar>
         <Tabs
-          value={slug}
+          value={tab.slug}
           onChange={(_, v: string) => (location.hash = v)}
           variant="scrollable"
           scrollButtons="auto"
           sx={{ px: 2 }}
         >
-          {demos.map((d) => (
-            <Tab key={d.slug} value={d.slug} label={d.label} />
+          {tabs.map((t) => (
+            <Tab key={t.slug} value={t.slug} label={t.label} />
           ))}
         </Tabs>
+        {tab.children.length > 1 && (
+          <Tabs
+            value={demo.slug}
+            onChange={(_, v: string) => (location.hash = v)}
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{ px: 2, minHeight: 40, "& .MuiTab-root": { minHeight: 40, py: 0.5 } }}
+          >
+            {tab.children.map((d) => (
+              <Tab key={d.slug} value={d.slug} label={d.label} />
+            ))}
+          </Tabs>
+        )}
       </AppBar>
 
       <Container maxWidth="lg" sx={{ my: 4 }}>
