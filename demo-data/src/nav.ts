@@ -21,6 +21,7 @@ export const NAV: NavTab[] = [
     label: "📝 フォーム",
     pages: [
       { slug: "textbox", label: "📝 テキストボックス" },
+      { slug: "csv-json", label: "📋 CSV/TSV 一括入力" },
       { slug: "select", label: "🔽 セレクト" },
       { slug: "checkbox", label: "☑️ チェックボックス" },
       { slug: "radio", label: "🔘 ラジオボタン" },
@@ -53,7 +54,7 @@ export const NAV: NavTab[] = [
 ]
 
 /** 名前を変えたページの古い slug (ブックマークを生かす)。 */
-const ALIASES: Record<string, string> = { "csv-json": "textbox" }
+const ALIASES: Record<string, string> = {}
 
 export const navPath = (tab: NavTab, page: NavPage) => `/${tab.slug}/${page.slug}`
 

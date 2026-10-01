@@ -2,7 +2,6 @@
 import { ref } from "vue"
 import { email, maxChars, pattern, required, whenFilled, zenkakuKatakana } from "@core"
 import { useForm } from "@/composables/useForm"
-import CsvJsonDemo from "@/demo/CsvJsonDemo.vue"
 import FormShell from "@/demo/FormShell.vue"
 import { fakeSave } from "@/demo/fakeSave"
 
@@ -75,15 +74,5 @@ const field = (key: keyof Profile) => ({
         persistent-hint
       />
     </FormShell>
-
-    <v-divider />
-    <div>
-      <div class="text-h6">📋 CSV / TSV の一括入力</div>
-      <p class="text-body-2 text-medium-emphasis mb-4">
-        テキストボックスに Excel などから貼り付けた表を、列定義に従って検査して JSON / CSV / TSV
-        に変換する。
-      </p>
-      <CsvJsonDemo />
-    </div>
   </div>
 </template>

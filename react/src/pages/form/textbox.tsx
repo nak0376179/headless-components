@@ -1,8 +1,7 @@
 import { useState, type ChangeEvent } from "react"
-import { Divider, InputAdornment, Stack, TextField, Typography } from "@mui/material"
+import { InputAdornment, Stack, TextField } from "@mui/material"
 import { email, maxChars, pattern, required, whenFilled, zenkakuKatakana } from "@core"
 import { useForm } from "@/hooks/useForm"
-import { CsvJsonDemo } from "@/demo/CsvJsonDemo"
 import { FormShell, fakeSave } from "@/demo/FormShell"
 
 type Profile = {
@@ -75,16 +74,6 @@ export default function TextboxPage() {
           helperText={form.fieldError("bio") ?? `${[...state.values.bio].length} / ${BIO_MAX} 文字`}
         />
       </FormShell>
-
-      <Divider />
-      <div>
-        <Typography variant="h6">📋 CSV / TSV の一括入力</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          テキストボックスに Excel などから貼り付けた表を、列定義に従って検査して JSON / CSV / TSV
-          に変換する。
-        </Typography>
-        <CsvJsonDemo />
-      </div>
     </Stack>
   )
 }

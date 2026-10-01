@@ -15,7 +15,7 @@ import {
 import { CsvJsonTextArea, type CsvJsonTextAreaHandle } from "@/components/CsvJsonTextArea"
 import { demoColumns, demoSamples, usageLabel, type DemoSample } from "@demo-data"
 
-export function CsvJsonDemo() {
+export default function CsvJsonPage() {
   const area = useRef<CsvJsonTextAreaHandle>(null)
   const [active, setActive] = useState<DemoSample | null>(null)
 

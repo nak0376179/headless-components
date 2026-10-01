@@ -26,7 +26,7 @@ describe("resolveNav", () => {
   })
   it("旧版の #slug (ページ名だけ・古い名前) も開ける", () => {
     expect(resolveNav("#infinite").path).toBe("/table/infinite")
-    expect(resolveNav("#csv-json").path).toBe("/form/textbox")
+    expect(resolveNav("#csv-json").path).toBe("/form/csv-json")
     expect(resolveNav("#effects").path).toBe("/effects/jigsaw")
   })
 })

@@ -72,7 +72,6 @@ const FORM_SHELL: UsageBlock = {
   file: "FormShell.tsx",
   code: formShell,
 }
-const csvTitle = (b: UsageBlock): UsageBlock => ({ ...b, title: `CSV / TSV ${b.title}` })
 
 export const usageBySlug: Record<string, UsageBlock[]> = {
   infinite: [
@@ -224,5 +223,4 @@ export const usageBySlug: Record<string, UsageBlock[]> = {
   pixelate: [{ title: "ページを包む", lang: "tsx", file: "Spoiler.tsx", code: fxPixelate }],
 }
 
-// テキストボックスのページ = フォームの基本 + CSV / TSV の一括入力
-usageBySlug.textbox = [FORM_BASIC, FORM_RULES, ...usageBySlug["csv-json"].map(csvTitle)]
+usageBySlug.textbox = [FORM_BASIC, FORM_RULES]
