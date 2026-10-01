@@ -5,6 +5,8 @@ export { DataTable } from "./DataTable"
 export type { DataTableProps } from "./DataTable"
 export { CursorTable } from "./CursorTable"
 export type { CursorTableProps } from "./CursorTable"
+export { DialogHost } from "./DialogHost"
+export type { DialogHostProps } from "./DialogHost"
 // 演出系
 export { JigsawPuzzle } from "./effects/JigsawPuzzle"
 export type { JigsawPuzzleProps } from "./effects/JigsawPuzzle"

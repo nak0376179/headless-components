@@ -1,6 +1,9 @@
 // ページ下部の「コードの使い方」。コード例は同じフォルダの実ファイルを ?raw で読む
 // (型検査を通るファイルなので、API とずれたら pnpm check で気づける)。
 import type { UsageBlock } from "@hc/demo-data"
+import dialogBasic from "./dialog/Basic.vue?raw"
+import dialogDemo from "../demos/DialogDemo.vue?raw"
+import cardDemo from "../demos/CardDemo.vue?raw"
 import formBasic from "./form/Basic.vue?raw"
 import formRules from "./form/rules.ts?raw"
 import selectDemo from "../demos/form/SelectDemo.vue?raw"
@@ -68,6 +71,31 @@ const FORM_SHELL: UsageBlock = {
 const csvTitle = (b: UsageBlock): UsageBlock => ({ ...b, title: `CSV / TSV ${b.title}` })
 
 export const usageBySlug: Record<string, UsageBlock[]> = {
+  dialog: [
+    {
+      title: "1. 置き方と開き方",
+      note: "createDialogs をアプリで 1 つ作り、一番外側に DialogHost を 1 か所置く。使う所では await するだけ。",
+      lang: "vue",
+      file: "DeleteButton.vue",
+      code: dialogBasic,
+    },
+    {
+      title: "2. このページのソース",
+      note: "中身を自由に作るダイアログ (フォーム入り) は、UI ライブラリのダイアログに useForm を組み合わせる。",
+      lang: "vue",
+      file: "DialogDemo.vue",
+      code: dialogDemo,
+    },
+  ],
+  card: [
+    {
+      title: "このページのソース",
+      note: "カードは見た目の型なので、ヘッドレスの部品は使っていない (状態は各カードの中で持つ)。題材のデータは @hc/demo-data。",
+      lang: "vue",
+      file: "CardDemo.vue",
+      code: cardDemo,
+    },
+  ],
   select: [pageSource("連動するセレクトと複数選択", "SelectDemo.vue", selectDemo), FORM_SHELL],
   checkbox: [
     pageSource("チェックした物をリストで持つ", "CheckboxDemo.vue", checkboxDemo),

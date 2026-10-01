@@ -1,5 +1,7 @@
 import type { ReactNode } from "react"
 import { EmployeesDemo } from "./EmployeesDemo"
+import { CardDemo } from "./CardDemo"
+import { DialogDemo } from "./DialogDemo"
 import { TextboxDemo } from "./form/TextboxDemo"
 import { SelectDemo } from "./form/SelectDemo"
 import { CheckboxDemo } from "./form/CheckboxDemo"
@@ -40,6 +42,16 @@ export const tabs: DemoTab[] = [
       { slug: "radio", label: "🔘 ラジオボタン", render: () => <RadioDemo /> },
       { slug: "autocomplete", label: "🔎 AutoComplete", render: () => <AutocompleteDemo /> },
     ],
+  },
+  {
+    slug: "cards",
+    label: "🃏 カード",
+    children: [{ slug: "card", label: "🃏 カード", render: () => <CardDemo /> }],
+  },
+  {
+    slug: "dialogs",
+    label: "💬 ダイアログ",
+    children: [{ slug: "dialog", label: "💬 ダイアログ", render: () => <DialogDemo /> }],
   },
   {
     slug: "table",

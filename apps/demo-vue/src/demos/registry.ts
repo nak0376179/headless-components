@@ -1,5 +1,7 @@
 import type { Component } from "vue"
 import EmployeesDemo from "./EmployeesDemo.vue"
+import CardDemo from "./CardDemo.vue"
+import DialogDemo from "./DialogDemo.vue"
 import TextboxDemo from "./form/TextboxDemo.vue"
 import SelectDemo from "./form/SelectDemo.vue"
 import CheckboxDemo from "./form/CheckboxDemo.vue"
@@ -37,6 +39,16 @@ export const tabs: DemoTab[] = [
       { slug: "radio", label: "🔘 ラジオボタン", component: RadioDemo },
       { slug: "autocomplete", label: "🔎 AutoComplete", component: AutocompleteDemo },
     ],
+  },
+  {
+    slug: "cards",
+    label: "🃏 カード",
+    children: [{ slug: "card", label: "🃏 カード", component: CardDemo }],
+  },
+  {
+    slug: "dialogs",
+    label: "💬 ダイアログ",
+    children: [{ slug: "dialog", label: "💬 ダイアログ", component: DialogDemo }],
   },
   {
     slug: "table",
