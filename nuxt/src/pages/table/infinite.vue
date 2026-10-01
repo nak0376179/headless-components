@@ -38,7 +38,7 @@ const tick = (now: number) => {
   }
   raf = requestAnimationFrame(tick)
 }
-// ブラウザでだけ数える (SSR のサーバーには requestAnimationFrame が無い)
+// 画面にいる間だけ数える
 onMounted(() => {
   last = performance.now()
   raf = requestAnimationFrame(tick)

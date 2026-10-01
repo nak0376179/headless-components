@@ -61,20 +61,23 @@ TanStack Query には React (`useInfiniteQuery`) と Vue の版があるが、�
   `queryClient.invalidateQueries({ queryKey })` で一覧を読み直させられる。
 - 読んだページは無限クエリとして積むので、「前へ」・一度見たページ・前の検索語はキャッシュから即座に出る。
 - Observer を購読する (= 取りに行く) のは、ストアの購読者がいる間だけ。React の StrictMode は
-  購読 → 解除 → 再購読をするが、同じコントローラを使い続けられる。サーバー (SSR) では取りに行かない。
+  購読 → 解除 → 再購読をするが、同じコントローラを使い続けられる。
 
-## 3. Nuxt を選んだことで気をつけること
+## 3. Nuxt は SPA で使う
 
-Vue 版は Nuxt 4 (SSR あり) にした。実際のアプリで使うときに SSR で困らないかをここで確かめるため。
+Vue 版は Nuxt 4 を **SPA (`ssr: false`)** で使う。build は `nuxt generate` で、静的なファイル (`nuxt/.output/public`) になる。
 
-- `pnpm check` で Nuxt の本番ビルド (SSR) まで通す。ハイドレーションの不一致は dev では出ないことがあるので、
-  ビルドしたサーバー (`node nuxt/.output/server/index.mjs`) で全ページを開いて確かめる。
-- setup で `window`・`requestAnimationFrame` に触らない (`onMounted` で)。`useMounted` は onMounted で取り付ける。
-- core の依存 (papaparse など) は nuxt/ の dependencies にも書く。nuxt/ から解決できない依存は、
-  Vite の SSR ビルドがサーバーのバンドルに埋め込んでしまう。
+最初は SSR ありで組んだが、使わないことにした (2026-10-02)。SSR に戻すときに当たったことを残しておく:
+
 - Nitro はサーバーのバンドルで `typeof window` を**文字列の中まで** `"undefined"` に置き換える。
   papaparse は Worker 用のコードを文字列で持っていてそこに当たり、壊れた JS になる。
-  `nitro.replace` で `"typeof window": "typeof window"` として止めた (取り込み先の Nuxt アプリでも要る)。
+  `nitro: { replace: { "typeof window": "typeof window" } }` で止められる。
+- core の依存が nuxt/ から解決できないと、Vite の SSR ビルドがサーバーのバンドルに埋め込む
+  (core の依存は nuxt/ の dependencies にも書いてある)。
+- テンプレートの `<component :is="'style'">` に文字を子として入れると、SSR で `"` が `&quot;` になって
+  CSS が壊れ、ハイドレーションも合わない (`v-html` で入れる)。
+- setup で `window`・`requestAnimationFrame` に触らない (`onMounted` で)。
+- ハイドレーションの不一致は dev では出ないことがあるので、ビルドしたサーバーで全ページを開いて確かめる。
 
 ## 4. 画面一覧を 1 つにする
 

@@ -19,8 +19,7 @@ defineProps<{ hint: string }>()
 <template>
   <div class="hcdp">
     <!-- テンプレートに <style> は書けないので component で出す (CSS は React 版と共有) -->
-    <!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -- 中身は自前の定数。文字のまま入れると SSR で > が &gt; になり CSS が壊れる -->
-    <component :is="'style'" v-html="DEMO_PAGE_CSS" />
+    <component :is="'style'">{{ DEMO_PAGE_CSS }}</component>
     <header class="hcdp-top">
       <div class="hcdp-logo">🧩 Acme Dashboard</div>
       <div class="hcdp-search">🔍 注文・顧客・商品を検索</div>

@@ -121,12 +121,6 @@ function aliasHints(ui, appDir, srcName) {
         `  alias: { "@core": fileURLToPath(new URL("./${srcName}/core", import.meta.url)) },`,
       )
     }
-    if (!conf.includes("typeof window")) {
-      hints.push(
-        "nuxt.config.ts に足す (Nitro が papaparse の文字列中の typeof window を置き換えて壊すため):",
-        '  nitro: { replace: { "typeof window": "typeof window" } },',
-      )
-    }
   } else {
     const vite = read("vite.config.ts") + read("vite.config.js")
     const ts = read("tsconfig.app.json") + read("tsconfig.json")

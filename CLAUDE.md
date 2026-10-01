@@ -25,20 +25,18 @@ CSV 変換の仕様は [docs/csv-json-spec.md](docs/csv-json-spec.md)。
   - 画面一覧 (上位タブ → 小タブ、名前、並び) は [demo-data/src/nav.ts](demo-data/src/nav.ts) の `NAV` が正。ページを足すときは NAV に 1 行足し、`react/src/pages/<tab>/<page>.tsx` (default export) と `nuxt/src/pages/<tab>/<page>.vue` を**両方**作る (片方だけだと `nav.test.ts` が落ちる)。slug を変えたら nav.ts の `ALIASES` に古い名前を残す。旧版の `#slug` も `resolveNav` が読み替える。
   - ページ下部の「コードの使い方」は `src/demo/usage/index.ts` の `usageBySlug`。コード例は `usage/` の実ファイル (型検査を通る) か、ページのソースそのものを `?raw` で読む (文字列に直接書かない。API とずれたら `pnpm check` で気づけるように)。
 - `pnpm test` はルートの `vitest.config.ts` の projects (core / demo-data / react / nuxt) を流す。jsdom に無い API のスタブは `test/setup.ts`。
-- `pnpm check` = format:check → lint → typecheck → test → build。push 前に通す。Nuxt はここで SSR のビルドまで通る。
-- SSR で落ちないか・ハイドレーションが合うかは、`pnpm --filter hc-nuxt build` → `PORT=4211 node nuxt/.output/server/index.mjs` で全ページを開いて確かめる (dev では出ない不一致がある)。
+- `pnpm check` = format:check → lint → typecheck → test → build。push 前に通す。Nuxt は SPA (`ssr: false`) で、build は `nuxt generate` (静的な `nuxt/.output/public`)。
 
 ## アプリへの取り込み
 
 - npm には出していない。`scripts/vendor.mjs` (`pnpm vendor <アプリ> --ui react|nuxt`) でコピーする。入る場所はこのリポジトリと同じ (`src/core/`・`src/components/`・`src/hooks/` or `src/composables/`) なので import の書き換えはしない。
 - 取り込み記録は `src/core/.vendored.json`。記録に無い同名ファイルがあれば上書きせず止まる。
-- 新しい外部依存を足したら、使う側 (core なら core/package.json、部品なら react/ か nuxt/ の package.json) の dependencies に書く (vendor がアプリに足りないものとして表示する。デモ専用の依存は vendor.mjs の `DEMO_ONLY`)。core の依存は react/・nuxt/ の dependencies にも同じ版で書く (Nuxt の SSR は nuxt/ から解決できない依存をバンドルに埋め込んでしまうため)。
+- 新しい外部依存を足したら、使う側 (core なら core/package.json、部品なら react/ か nuxt/ の package.json) の dependencies に書く (vendor がアプリに足りないものとして表示する。デモ専用の依存は vendor.mjs の `DEMO_ONLY`)。core の依存は react/・nuxt/ の dependencies にも同じ版で書く (アプリから解決できる形にそろえる。取り込み先と同じ状態)。
 
 ## 注意
 
 - Vue 側で TanStack の `table` 自体はリアクティブではない。テンプレートで `table` を読む箇所は、`useDataTable` の `state` を読んで依存を作る (`TableView.vue` の `version` prop)。
 - React 側で `useDataTable` に渡す `data` を描画のたびに新しい配列にすると、`setData` → 再描画が止まらない。`useMemo` で包む (`CursorTable.tsx`)。
-- Nuxt の SSR: setup で `requestAnimationFrame` や `window` に触らない (`onMounted` で)。テンプレートの `<component :is="'style'">` に文字を子として入れると SSR で `"` が `&quot;` になり CSS が壊れてハイドレーションも合わない → `v-html` で入れる (`demo/DemoPage.vue`)。
-- Nitro はサーバーのバンドルで `typeof window` を文字列の中まで `"undefined"` に置き換える。papaparse が壊れるので `nuxt.config.ts` の `nitro.replace` で止めている。
+- Nuxt は SPA (`ssr: false`。2026-10-02 に決めた)。SSR に戻すなら、papaparse が Nitro の `typeof window` 置き換えで壊れる・`<component :is="'style'">` の文字が SSR でエスケープされる、の 2 点に当たる ([docs/architecture.md](docs/architecture.md))。
 - Vuetify の `v-tabs` は項目の差し替え中にも `update:model-value` を出す。値が今の一覧にあるか確かめてから動く (`layouts/default.vue`)。
 - MUI は v9、Vuetify は v4、Nuxt は 4、react-router は 8、TanStack Query は v5。

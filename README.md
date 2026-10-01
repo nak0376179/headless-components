@@ -14,7 +14,7 @@ react/                React + MUI + react-router (http://localhost:5210)
     components/               MUI で包んだ部品 (DataTable・CsvJsonTextArea…)  ← アプリへ取り込む
     hooks/                    core を React で使うフック (useCsvJson・useDataTable…) ← アプリへ取り込む
     layouts/ pages/ demo/     デモ (pages/<tab>/<page>.tsx が /<tab>/<page> になる)
-nuxt/                 Nuxt 4 + Vuetify、SSR (http://localhost:5211)
+nuxt/                 Nuxt 4 + Vuetify、SPA (http://localhost:5211)
   src/
     components/               Vuetify で包んだ部品                                ← アプリへ取り込む
     composables/              core を Vue で使う composable                       ← アプリへ取り込む
@@ -84,8 +84,6 @@ pnpm vendor <アプリのディレクトリ> --check       # 取り込んだ後�
   Nuxt 4 の既定どおり `app/` なら `app/` の下）。テストとデモは入らない。
 - アプリには別名 `@core` → `src/core`（と `@` → `src`。Nuxt は最初からある）を張る。足りない設定と
   依存パッケージ（バージョン付きの `pnpm add ...`）は取り込み時に表示される。
-- Nuxt では `nuxt.config.ts` に `nitro: { replace: { "typeof window": "typeof window" } }` も要る
-  （Nitro が papaparse の文字列中の句を置き換えて壊すため。これも表示される）。
 - **取り込んだファイルは編集しない。** 直すときはこのリポジトリを直して取り込み直す（同じコマンドで上書き）。
   アプリ固有の見た目や既定値は別のファイルで包み直す。取り込み記録 (`src/core/.vendored.json`) に無い
   同名のファイル（アプリのコード）があれば上書きせず止まる。
@@ -97,7 +95,7 @@ pnpm install
 pnpm dev:react     # http://localhost:5210
 pnpm dev:nuxt      # http://localhost:5211
 pnpm test          # 全体の vitest (core / demo-data / react / nuxt)
-pnpm check         # format:check → lint → typecheck → test → build (Nuxt は SSR のビルドまで)
+pnpm check         # format:check → lint → typecheck → test → build (Nuxt は nuxt generate で静的な SPA)
 ```
 
 work/github のランチャー (`python tools/launcher.py start headless-components`) からも両方まとめて起動できる。

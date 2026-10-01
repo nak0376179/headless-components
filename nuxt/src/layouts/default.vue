@@ -19,7 +19,7 @@ const goPage = (v: unknown) => {
   if (known && v !== page.value.slug) navigateTo(navPath(tab.value, { slug: String(v), label: "" }))
 }
 
-// 旧版 (#slug で切り替えていた頃) のブックマーク。ハッシュはサーバーに届かないのでブラウザ側で読み替える。
+// 旧版 (#slug で切り替えていた頃) のブックマーク。/ に付いた #slug をページのパスに読み替える。
 onMounted(() => {
   if (route.hash) navigateTo(resolveNav(route.hash).path, { replace: true })
 })
