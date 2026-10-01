@@ -110,7 +110,7 @@ export function EmployeesDemo() {
           data={items}
           columns={columns}
           getRowId={(e) => e.email}
-          searchPlaceholder="氏名・部署・役職で検索…"
+          searchPlaceholder="フリーワード検索 (空白で区切ると AND。例: 営業 在籍)"
         />
       )}
 

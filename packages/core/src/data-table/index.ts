@@ -1,4 +1,5 @@
 export { createDataTable, resolveTemplate, paginationSummary, PAGE_SIZE_OPTIONS } from "./table"
+export { freeWordFilter, matchesFreeWord, normalizeSearchText, splitSearchTerms } from "./free-word"
 export type {
   DataTableColumn,
   DataTableController,

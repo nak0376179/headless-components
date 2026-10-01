@@ -93,3 +93,44 @@ describe("createMemorySource + createCursorPager", () => {
     expect(pager.get().loading).toBe(false)
   })
 })
+
+describe("フリーワード検索", () => {
+  type P = { name: string; dept: string; status: "active" | "leave"; salary: number }
+  const people: P[] = [
+    { name: "山田太郎", dept: "営業部", status: "active", salary: 5200000 },
+    { name: "ヤマダ花子", dept: "開発部", status: "leave", salary: 6100000 },
+    { name: "Suzuki Ichiro", dept: "営業部", status: "leave", salary: 4800000 },
+  ]
+  const p = createColumnHelper<P>()
+  const cols = [
+    p.accessor("name", { header: "氏名" }),
+    p.accessor("dept", { header: "部署" }),
+    p.accessor("status", {
+      header: "状態",
+      meta: { searchText: (v) => (v === "active" ? "在籍" : "休職") },
+    }),
+    p.accessor("salary", { header: "給与" }),
+  ]
+  const names = (q: string) => {
+    const t = createDataTable({ data: people, columns: cols })
+    t.setGlobalFilter(q)
+    return t.table.getFilteredRowModel().rows.map((r) => r.original.name)
+  }
+
+  it("空白区切りの語は AND で、列をまたいで当たる", () => {
+    expect(names("営業 休職")).toEqual(["Suzuki Ichiro"])
+    expect(names("営業　在籍")).toEqual(["山田太郎"]) // 全角空白も区切り
+  })
+  it("全角/半角・大文字/小文字・ひらがな/カタカナの違いを無視する", () => {
+    expect(names("ＳＵＺＵＫＩ")).toEqual(["Suzuki Ichiro"])
+    expect(names("やまだ")).toEqual(["ヤマダ花子"])
+    expect(names("ﾔﾏﾀﾞ")).toEqual(["ヤマダ花子"])
+  })
+  it("meta.searchText は画面の文字で、数値の列も当たる", () => {
+    expect(names("在籍")).toEqual(["山田太郎"])
+    expect(names("6100000")).toEqual(["ヤマダ花子"])
+  })
+  it("空白だけなら絞らない", () => {
+    expect(names("   ")).toHaveLength(3)
+  })
+})

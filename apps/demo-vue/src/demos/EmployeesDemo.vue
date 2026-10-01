@@ -87,7 +87,7 @@ const rowId = (e: Employee) => e.email
       :data="state.items"
       :columns="columns"
       :get-row-id="rowId"
-      search-placeholder="氏名・部署・役職で検索…"
+      search-placeholder="フリーワード検索 (空白で区切ると AND。例: 営業 在籍)"
     />
 
     <v-dialog
