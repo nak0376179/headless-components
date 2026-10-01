@@ -1,6 +1,10 @@
 import type { Component } from "vue"
-import CsvJsonDemo from "./CsvJsonDemo.vue"
 import EmployeesDemo from "./EmployeesDemo.vue"
+import TextboxDemo from "./form/TextboxDemo.vue"
+import SelectDemo from "./form/SelectDemo.vue"
+import CheckboxDemo from "./form/CheckboxDemo.vue"
+import RadioDemo from "./form/RadioDemo.vue"
+import AutocompleteDemo from "./form/AutocompleteDemo.vue"
 import ServerPaginationDemo from "./ServerPaginationDemo.vue"
 
 export type Demo = {
@@ -24,19 +28,21 @@ export type DemoTab = { slug: string; label: string; children: Demo[] }
 /** 上位タブの一覧。先頭が既定 (#slug が無い・知らないとき開く)。React 版と揃える。 */
 export const tabs: DemoTab[] = [
   {
-    slug: "csv-json",
-    label: "📋 CSV→JSON",
-    children: [{ slug: "csv-json", label: "📋 CSV→JSON", component: CsvJsonDemo }],
-  },
-  {
-    slug: "datatable",
-    label: "📊 データテーブル",
-    children: [{ slug: "datatable", label: "📊 データテーブル", component: EmployeesDemo }],
-  },
-  {
-    slug: "server-pagination",
-    label: "🗄️ サーバページネーション",
+    slug: "form",
+    label: "📝 フォーム",
     children: [
+      { slug: "textbox", label: "📝 テキストボックス", component: TextboxDemo },
+      { slug: "select", label: "🔽 セレクト", component: SelectDemo },
+      { slug: "checkbox", label: "☑️ チェックボックス", component: CheckboxDemo },
+      { slug: "radio", label: "🔘 ラジオボタン", component: RadioDemo },
+      { slug: "autocomplete", label: "🔎 AutoComplete", component: AutocompleteDemo },
+    ],
+  },
+  {
+    slug: "table",
+    label: "📊 テーブル",
+    children: [
+      { slug: "datatable", label: "📊 データテーブル", component: EmployeesDemo },
       {
         slug: "server-pagination",
         label: "🗄️ サーバページネーション",
@@ -47,6 +53,9 @@ export const tabs: DemoTab[] = [
   { slug: "effects", label: "✨ 演出", children: effectDemos },
 ]
 
+/** 名前を変えたページの古い #slug (ブックマークを生かす)。 */
+const ALIASES: Record<string, string> = { "csv-json": "textbox" }
+
 /** デモの一覧 (小タブまで平らにしたもの)。 */
 export const demos: Demo[] = tabs.flatMap((t) => t.children)
 
@@ -55,6 +64,7 @@ export const demos: Demo[] = tabs.flatMap((t) => t.children)
  * 知らない slug は既定 (先頭のタブの先頭) にする。
  */
 export function resolveSlug(slug: string): { tab: DemoTab; demo: Demo } {
+  slug = ALIASES[slug] ?? slug
   for (const tab of tabs) {
     const demo = tab.children.find((d) => d.slug === slug)
     if (demo) return { tab, demo }

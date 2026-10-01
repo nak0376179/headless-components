@@ -18,11 +18,13 @@ import {
   createCsvJson,
   createCursorPager,
   createDataTable,
+  createForm,
   type ColumnSpec,
   type CsvJsonOptions,
   type CursorPagerOptions,
   type DataTableColumn,
   type DataTableOptions,
+  type FormOptions,
   type ReadableStore,
 } from "@hc/core"
 
@@ -64,6 +66,15 @@ export function useCsvJson(options: UseCsvJsonOptions) {
     () => toValue(options.columns),
     (columns) => controller.setColumns(columns),
   )
+  const state = useStore(controller)
+  return { state, controller }
+}
+
+// ---------------------------------------------------------------- form
+
+/** フォームの状態と操作。state は shallowRef (テンプレートでは state.values.name のように読める)。 */
+export function useForm<T extends object>(options: FormOptions<T>) {
+  const controller = createForm<T>(options)
   const state = useStore(controller)
   return { state, controller }
 }

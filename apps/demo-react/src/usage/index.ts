@@ -1,6 +1,13 @@
 // ページ下部の「コードの使い方」。コード例は同じフォルダの実ファイルを ?raw で読む
 // (型検査を通るファイルなので、API とずれたら pnpm check で気づける)。
 import type { UsageBlock } from "@hc/demo-data"
+import formBasic from "./form/basic.tsx?raw"
+import formRules from "./form/rules.ts?raw"
+import selectDemo from "../demos/form/SelectDemo.tsx?raw"
+import checkboxDemo from "../demos/form/CheckboxDemo.tsx?raw"
+import radioDemo from "../demos/form/RadioDemo.tsx?raw"
+import autocompleteDemo from "../demos/form/AutocompleteDemo.tsx?raw"
+import formShell from "../demos/form/FormShell.tsx?raw"
 import csvColumns from "./csv-json/columns.ts?raw"
 import csvComponent from "./csv-json/component.tsx?raw"
 import csvControl from "./csv-json/control.tsx?raw"
@@ -31,7 +38,46 @@ export const VENDOR_BLOCK: UsageBlock = {
   ].join("\n"),
 }
 
+const FORM_BASIC: UsageBlock = {
+  title: "フォームの基本",
+  note: "useForm が値・検査・触れたか・送信中を持つ。部品には値と変更・blur・エラーを渡すだけなので、セレクトやチェックボックスでも同じ書き方になる。",
+  lang: "tsx",
+  file: "SignupForm.tsx",
+  code: formBasic,
+}
+const FORM_RULES: UsageBlock = {
+  title: "検査の書き方",
+  note: "検査は「理由か null を返す関数」。配列で並べると順に当てる。他の項目を見たいときは 2 つ目の引数を使う。",
+  lang: "ts",
+  file: "rules.ts",
+  code: formRules,
+}
+const pageSource = (title: string, file: string, code: string): UsageBlock => ({
+  title,
+  note: "このページのソースそのもの (送信ボタンと値の表示は下の FormShell)。",
+  lang: "tsx",
+  file,
+  code,
+})
+const FORM_SHELL: UsageBlock = {
+  title: "共通の枠 (送信・リセット・値の表示)",
+  lang: "tsx",
+  file: "FormShell.tsx",
+  code: formShell,
+}
+const csvTitle = (b: UsageBlock): UsageBlock => ({ ...b, title: `CSV / TSV ${b.title}` })
+
 export const usageBySlug: Record<string, UsageBlock[]> = {
+  select: [pageSource("連動するセレクトと複数選択", "SelectDemo.tsx", selectDemo), FORM_SHELL],
+  checkbox: [
+    pageSource("チェックした物をリストで持つ", "CheckboxDemo.tsx", checkboxDemo),
+    FORM_SHELL,
+  ],
+  radio: [pageSource("選んだ組み合わせをリストに保存", "RadioDemo.tsx", radioDemo), FORM_SHELL],
+  autocomplete: [
+    pageSource("読みでも探せる AutoComplete", "AutocompleteDemo.tsx", autocompleteDemo),
+    FORM_SHELL,
+  ],
   "csv-json": [
     {
       title: "1. 列を定義する",
@@ -111,3 +157,6 @@ export const usageBySlug: Record<string, UsageBlock[]> = {
   "cheat-code": [{ title: "ページを包む", lang: "tsx", file: "EasterEgg.tsx", code: fxCheat }],
   pixelate: [{ title: "ページを包む", lang: "tsx", file: "Spoiler.tsx", code: fxPixelate }],
 }
+
+// テキストボックスのページ = フォームの基本 + CSV / TSV の一括入力
+usageBySlug.textbox = [FORM_BASIC, FORM_RULES, ...usageBySlug["csv-json"].map(csvTitle)]

@@ -16,7 +16,8 @@
 - パッケージはビルドせず、`exports` で `src/index.ts` を直接指す (デモの Vite がソースのまま取り込む)。
 - デモは `apps/demo-react` (5210) と `apps/demo-vue` (5211)。`#slug` で同じデモが開く (右上のリンクで行き来できる)。
   - 演出系のデモは `demos/effects/*Demo.tsx` / `*Demo.vue` を置けば自動で登録される (`meta` を export する。Vue は `<script setup>` とは別の `<script>` ブロックで)。
-  - それ以外のデモは `demos/registry.tsx` / `registry.ts` に 1 行足す。
+  - それ以外のデモは `demos/registry.tsx` / `registry.ts` の `tabs` (上位タブ → 小タブ) に 1 行足す。先頭のタブの先頭が既定のページ。slug を変えたら `ALIASES` に古い slug を残す。
+  - ページ下部の「コードの使い方」は `usage/index.ts` の `usageBySlug`。コード例は `usage/` の実ファイル (型検査を通る) か、デモのソースそのものを `?raw` で読む (文字列に直接書かない。API とずれたら `pnpm check` で気づけるように)。
 - `pnpm test` は `vitest.config.ts` の projects で全パッケージを流す。jsdom に無い API のスタブは `test/setup.ts`。
 - `pnpm check` = format:check → lint → typecheck → test → build。push 前に通す。
 
