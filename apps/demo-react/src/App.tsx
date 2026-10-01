@@ -16,6 +16,7 @@ import {
 import DarkModeIcon from "@mui/icons-material/DarkMode"
 import LightModeIcon from "@mui/icons-material/LightMode"
 import { resolveSlug, tabs } from "./demos/registry"
+import { UsageSection } from "./usage/UsageSection"
 
 // ルーターは使わず #slug で切り替える (Vue 版と同じ URL で同じデモが開く)。
 // 上位タブの slug (#effects) や知らない slug は resolveSlug が開くデモを決める。
@@ -86,6 +87,7 @@ export function App() {
 
       <Container maxWidth="lg" sx={{ my: 4 }}>
         <Box key={demo.slug}>{demo.render()}</Box>
+        <UsageSection key={`usage-${demo.slug}`} slug={demo.slug} />
       </Container>
     </ThemeProvider>
   )

@@ -3,6 +3,7 @@
 import { computed, onBeforeUnmount, ref } from "vue"
 import { useTheme } from "vuetify"
 import { resolveSlug, tabs } from "./demos/registry"
+import UsageSection from "./usage/UsageSection.vue"
 
 // 上位タブの slug (#effects) や知らない slug は resolveSlug が開くデモを決める。
 const currentSlug = () => resolveSlug(location.hash.slice(1)).demo.slug
@@ -52,6 +53,7 @@ const toggleTheme = () => theme.change(theme.global.current.value.dark ? "light"
       </v-tabs>
       <v-container class="py-8" style="max-width: 1200px">
         <component :is="demo.component" :key="demo.slug" />
+        <UsageSection :key="`usage-${demo.slug}`" :slug="demo.slug" />
       </v-container>
     </v-main>
   </v-app>

@@ -1,3 +1,4 @@
 export * from "./employees"
 export * from "./csvSamples"
 export * from "./demoPage"
+export * from "./highlight"
