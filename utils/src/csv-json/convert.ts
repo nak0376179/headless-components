@@ -48,8 +48,17 @@ export type ConvertResult =
 /** 返すエラー件数の上限。これを超えた分は打ち切る。 */
 export const MAX_ERRORS = 10
 
-/** セルの前後の空白（全角スペース含む）を取り除く。 */
-const trimCell = (value: string): string => value.replace(/^[\s\u3000]+|[\s\u3000]+$/g, "")
+/**
+ * 目に見えないのに値を変えてしまうゼロ幅文字。Web ページからのコピーで混じる。
+ * - どこにあっても取り除く: ゼロ幅スペース (U+200B)・ワードジョイナー (U+2060)・BOM / ゼロ幅ノーブレークスペース (U+FEFF)
+ * - 前後だけ取り除く: ゼロ幅非接合子 (U+200C)・ゼロ幅接合子 (U+200D)。途中のものは家族の絵文字 (👨 + 接合子 + 👩 + 接合子 + 👧) のような合成絵文字をつないでいるので残す
+ */
+const ZERO_WIDTH_ANYWHERE = /[\u200B\u2060\uFEFF]/g
+const EDGE_BLANKS = /^[\s\u3000\u200C\u200D]+|[\s\u3000\u200C\u200D]+$/g
+
+/** セルの前後の空白（全角スペース含む）とゼロ幅文字を取り除く。 */
+const trimCell = (value: string): string =>
+  value.replace(ZERO_WIDTH_ANYWHERE, "").replace(EDGE_BLANKS, "")
 
 /**
  * 区切り文字を決める。最初の空でない行 (ヘッダ) にタブがあれば TSV、なければ CSV。
