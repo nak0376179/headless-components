@@ -4,7 +4,7 @@
 //
 //   pnpm csv:report
 //
-// pnpm deploy:demos は公開の前に必ずこれを流す (公開したデモのテスト結果は、その時点のもの)。
+// nak-portal に上げるビルド (scripts/portal-build.mjs) は必ず先にこれを流す (載るテスト結果は、その時点のもの)。
 import { execSync } from "node:child_process"
 import fs from "node:fs"
 import os from "node:os"

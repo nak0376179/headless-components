@@ -9,11 +9,12 @@ import report from "./generated/csv-report.json"
 export type CsvReport = typeof report
 export const CSV_REPORT: CsvReport = report
 
-// 文書の中のリンク (README.md ↔ SPEC.md) を、デモのページへ向ける
+// 文書の中のリンク (README.md ↔ SPEC.md) を、デモのページへ向ける。置き場のパス (base) の下でも動くよう、
+// href は "#nav:<パス>" にしておき、MarkdownDoc がクリックをルーターで処理する
 const linkToPages = (md: string) =>
   md
-    .replace(/\]\(SPEC\.md(#[^)]*)?\)/g, "](/csv-json/spec)")
-    .replace(/\]\(README\.md(#[^)]*)?\)/g, "](/csv-json/readme)")
+    .replace(/\]\(SPEC\.md(#[^)]*)?\)/g, "](#nav:/csv-json/spec)")
+    .replace(/\]\(README\.md(#[^)]*)?\)/g, "](#nav:/csv-json/readme)")
 
 /** README.md (機能と使い方) を HTML にしたもの。 */
 export const CSV_README_HTML = marked.parse(linkToPages(readmeMd), { async: false })

@@ -22,9 +22,11 @@ function Fallback() {
   return <Navigate to={resolveNav(hash || pathname).path} replace />
 }
 
-const router = createBrowserRouter([
-  { Component: DemoLayout, children: [...pageRoutes, { path: "*", Component: Fallback }] },
-])
+const router = createBrowserRouter(
+  [{ Component: DemoLayout, children: [...pageRoutes, { path: "*", Component: Fallback }] }],
+  // 置き場のパス (vite の base。nak-portal なら /admin/web/hc-react/) の下で動かす
+  { basename: import.meta.env.BASE_URL.replace(/\/$/, "") || "/" },
+)
 
 // サーバーページネーション・無限スクロールの取得とキャッシュ (utils の部品も useAppQueryClient でこれを使う)。
 const queryClient = new QueryClient({

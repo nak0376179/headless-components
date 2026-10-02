@@ -34,11 +34,13 @@ CSV/TSV 変換の使い方と仕様は [utils/src/csv-json/README.md](utils/src/
 - 渡した後に直すときは、このリポジトリを直して書き出し直す。
 - デモの CSV/TSV のタブには「機能と使い方」(README.md)・「詳しい仕様」(SPEC.md)・「テスト結果」の小タブがある。文書は同じファイルを `demo-data/src/csvDocs.ts` が `?raw` で読んで marked で HTML にする (デモ用に別の文章を書かない)。テスト結果は `pnpm csv:report` が書く `demo-data/src/generated/csv-report.json` (コミットする。テストを足したら作り直す)。
 
-## 公開 (出先から見る)
+## 出先から見る (nak-portal に非公開で置く)
 
-- `pnpm deploy:demos` で https://hc-react-demo.pages.dev と https://hc-nuxt-demo.pages.dev (Cloudflare Pages、静的な SPA) に出す。最初に `csv:report` を流すので、載るテスト結果はその時点のもの。
-- 右上の「もう一方の版」のリンクは、ビルド時の `VITE_NUXT_URL` / `NUXT_PUBLIC_REACT_URL` で公開先どうしに向く。
-- wrangler 4.14x は Pages を Workers に回そうとしてワークスペースのルートで失敗するので、プロジェクトは `pages project create --force` で作った (以後の deploy に --force は要らない)。
+- デモは **nak-portal の管理者ページの「遊ぶ」** (`/admin/web/hc-react/`・`/admin/web/hc-nuxt/`。ログインした自分だけが見られる) に置く。公開の置き場は増やさない (2026-10-02 に Cloudflare Pages の公開プロジェクトを作ったが、すぐ消した)。
+- 上げ方: nak-portal で `npm run publish-web -- hc-react hc-nuxt`。設定は nak-portal の `config/web.json` で、ビルドはこのリポジトリの `pnpm portal:react` / `pnpm portal:nuxt` (`scripts/portal-build.mjs`)。先に `csv:report` を流すので、載るテスト結果はその時点のもの (テストが落ちたら上がらない)。
+- ポータル用のビルドは置き場のパスの下で動く: React は Vite の `base` (`HC_BASE`) と react-router の `basename`、Nuxt は `NUXT_APP_BASE_URL`。右上の「もう一方の版」は `VITE_NUXT_URL` / `NUXT_PUBLIC_REACT_URL` でポータル内を指す。ローカルの開発は今まで通り `/`。
+- 置き場は「見つからなければ index.html」をしない。React はビルド後に画面ごとの `index.html` を複製し (`vite.config.ts` の `hc-page-copies`)、Nuxt は generate がページごとに作るので、どのページも直接開ける。
+- 文書の中のリンク (README ↔ SPEC) は `#nav:<パス>` にしておき、`MarkdownDoc` がルーターで開く (base の下でも動くように)。
 
 ## 構成・コマンド
 

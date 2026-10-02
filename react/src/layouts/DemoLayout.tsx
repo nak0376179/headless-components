@@ -20,7 +20,7 @@ import LightModeIcon from "@mui/icons-material/LightMode"
 import { NAV, navPath, resolveNav } from "@demo-data"
 import { UsageSection } from "@/demo/usage/UsageSection"
 
-// もう一方 (Nuxt 版) の URL。公開するときはビルド時に VITE_NUXT_URL で差し替える (scripts/deploy-demos.mjs)。
+// もう一方 (Nuxt 版) の URL。公開するときはビルド時に VITE_NUXT_URL で差し替える (scripts/portal-build.mjs)。
 const NUXT_URL = import.meta.env.VITE_NUXT_URL ?? "http://localhost:5211"
 
 // デモ全体の枠 (タイトル・上位タブ・小タブ・コードの使い方)。ページは <Outlet /> に入る。

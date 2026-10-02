@@ -7,7 +7,7 @@ import { NAV, navPath, resolveNav } from "@demo-data"
 import UsageSection from "@/demo/usage/UsageSection.vue"
 
 const route = useRoute()
-// もう一方 (React 版) の URL。公開するときはビルド時に NUXT_PUBLIC_REACT_URL で差し替える (scripts/deploy-demos.mjs)。
+// もう一方 (React 版) の URL。公開するときはビルド時に NUXT_PUBLIC_REACT_URL で差し替える (scripts/portal-build.mjs)。
 const reactUrl = useRuntimeConfig().public.reactUrl
 const current = computed(() => resolveNav(route.path))
 const tab = computed(() => current.value.tab)

@@ -16,8 +16,9 @@
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "vendor": "node scripts/vendor.mjs",
     "handoff": "node scripts/handoff.mjs",
-    "deploy:demos": "node scripts/deploy-demos.mjs",
-    "csv:report": "node scripts/csv-report.mjs"
+    "csv:report": "node scripts/csv-report.mjs",
+    "portal:react": "node scripts/portal-build.mjs react",
+    "portal:nuxt": "node scripts/portal-build.mjs nuxt"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
