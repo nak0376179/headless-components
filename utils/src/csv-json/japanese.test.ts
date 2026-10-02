@@ -43,8 +43,10 @@ describe("Excel からのコピー", () => {
     expect(rows("　氏名　\t　年齢\n山田\t30")[0]).toMatchObject({ name: "山田", age: "30" })
   })
 
-  it("タブ区切りなら、値の中のカンマは区切りにならない", () => {
-    expect(rows("氏名\t備考\n山田\tA,B,C")[0].note).toBe("A,B,C")
+  it("タブ区切りでも、値に半角カンマがあればエラーにする", () => {
+    expect(messages("氏名\t備考\n山田\tA,B,C")).toEqual([
+      "2行目: 「備考」にカンマ（,）は使えません",
+    ])
   })
 })
 

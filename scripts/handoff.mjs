@@ -19,6 +19,8 @@ import { fileURLToPath } from "node:url"
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const SRC = path.join(ROOT, "utils/src")
 const README = path.join(SRC, "csv-json/README.md")
+/** 書き出したものを型検査する TypeScript の版 (--verify)。 */
+const TS_VERSIONS = ["5", "6", "7"]
 
 const posix = (p) => p.split(path.sep).join("/")
 const readJson = (p) => JSON.parse(fs.readFileSync(p, "utf8"))
@@ -197,10 +199,16 @@ function verify(utilsDir) {
   // npm / npx は Windows では .cmd なのでシェル経由で呼ぶ (引数は固定の文字列だけ)
   const run = (command) => execSync(command, { cwd: tmp, stdio: "inherit" })
   run("npm install --no-audit --no-fund --loglevel=error")
-  run("npx tsc -p .")
+  // 受け取る側の TypeScript の版は分からないので、5・6・7 (7 は Go で書き直したネイティブ版) のどれでも通るか確かめる
+  for (const v of TS_VERSIONS) {
+    console.log(`型検査: TypeScript ${v}`)
+    run(`npx -y -p typescript@${v} tsc -p .`)
+  }
   run("npx vitest run")
   fs.rmSync(tmp, { recursive: true, force: true })
-  console.log("検証 OK: papaparse だけで型検査とテストが通った")
+  console.log(
+    `検証 OK: papaparse だけで、TypeScript ${TS_VERSIONS.join("・")} の型検査とテストが通った`,
+  )
 }
 
 function main() {

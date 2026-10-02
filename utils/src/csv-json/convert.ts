@@ -168,7 +168,13 @@ export function convertDelimitedText(
       } else {
         // 文字数はコードポイント数で数える（サロゲートペアの絵文字などを1文字として扱う）。
         const len = [...value].length
-        if (spec.maxLength !== undefined && len > spec.maxLength) {
+        // 値に半角カンマは入れさせない (TSV でも、CSV で引用符に包んでも)。全角の「，」「、」は別の文字なので通す。
+        if (value.includes(",")) {
+          if (
+            addError(rowNo, spec.label, `${rowNo}行目: 「${spec.label}」にカンマ（,）は使えません`)
+          )
+            break
+        } else if (spec.maxLength !== undefined && len > spec.maxLength) {
           if (
             addError(
               rowNo,

@@ -66,3 +66,5 @@ CSV/TSV 変換の使い方と仕様は [utils/src/csv-json/README.md](utils/src/
 - Vuetify の `v-tabs` は項目の差し替え中にも `update:model-value` を出す。値が今の一覧にあるか確かめてから動く (`layouts/default.vue`)。
 - Windows で zip を作るときは System32 の `tar.exe` を使う (Git Bash の GNU tar は zip を作れず、`C:` をホスト名と読む)。
 - MUI は v9、Vuetify は v4、Nuxt は 4、react-router は 8、TanStack Query は v5。
+- TypeScript は 6.0 (2026-10-02 に 5.9 から上げた)。最新は 7 (Go で書き直したネイティブ版) だが、typescript-eslint が `<6.1.0` までで、vue-tsc も TS の JS API に頼るので、開発環境は 6 に留めている。別チームへ渡す utils は `pnpm handoff --verify` で TS 5・6・7 のどれでも型検査が通ることを確かめている。
+- CSV/TSV の値に半角カンマは使えない (TSV でも、CSV の引用符の中でもエラー。2026-10-02 に決めた)。全角の「，」「、」は通す。

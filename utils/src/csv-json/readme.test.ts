@@ -67,6 +67,17 @@ describe("README の「できること」", () => {
     ])
   })
 
+  it("4. 値に半角カンマは入れられない (TSV でも)", () => {
+    expect(
+      messages(
+        convertDelimitedText("氏名\tメールアドレス\t備考\n山田太郎\ttaro@example.com\t東京,大阪", [
+          ...columns,
+          { label: "備考", key: "note", usage: "optional" },
+        ]),
+      ),
+    ).toEqual(["2行目: 「備考」にカンマ（,）は使えません"])
+  })
+
   it("5. 1 行の中の複数列のエラーを列ごとに返す (1 セルにつき 1 件)", () => {
     expect(messages(run("氏名,メールアドレス,年齢", ",taro,三十"))).toEqual([
       "2行目: 「氏名」は必須です",

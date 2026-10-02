@@ -355,12 +355,39 @@ describe("入力パースとトリム", () => {
     })
   })
 
-  it("引用符で囲めば値の中のカンマは区切りにならない", () => {
+  it("引用符で囲んでも、値にカンマがあればエラーになる (列はずれない)", () => {
     const input = ["氏名,メールアドレス", '"山田, 太郎",taro@example.com'].join("\n")
     const result = convertDelimitedText(input, columns)
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.errors).toEqual([
+      { row: 2, label: "氏名", message: "2行目: 「氏名」にカンマ（,）は使えません" },
+    ])
+  })
+
+  it("カンマのエラーは文字数・validate より先に判定する (1 セル 1 件)", () => {
+    const spec: ColumnSpec = {
+      label: "項目",
+      key: "v",
+      usage: "required",
+      maxLength: 2,
+      validate: () => "だめ",
+    }
+    const result = convertDelimitedText("項目\t備考\nあ,いうえお\tx", [
+      spec,
+      { label: "備考", key: "n", usage: "unused" },
+    ])
+    expect(result.ok ? [] : result.errors.map((e) => e.message)).toEqual([
+      "2行目: 「項目」にカンマ（,）は使えません",
+    ])
+  })
+
+  it("不要 (unused) の列はカンマがあっても検査しない", () => {
+    const result = convertDelimitedText(
+      ["氏名\tメールアドレス\tメモ", "山田\ta@example.com\tA,B"].join("\n"),
+      columns,
+    )
     expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.rows[0].name).toBe("山田, 太郎")
   })
 
   it("CRLF 改行でも変換できる", () => {
@@ -371,12 +398,12 @@ describe("入力パースとトリム", () => {
     expect(result.rows).toEqual([{ name: "山田太郎", email: "taro@example.com", age: "" }])
   })
 
-  it("CSV 出力ではカンマを含む値が引用される", () => {
-    const input = ["氏名,メールアドレス", '"山田, 太郎",taro@example.com'].join("\n")
+  it("CSV 出力では改行・引用符を含む値が引用される", () => {
+    const input = ["氏名\tメールアドレス", '"山田\n太郎"\ttaro@example.com'].join("\n")
     const result = convertDelimitedText(input, columns, "csv")
     expect(result.ok).toBe(true)
     if (!result.ok) return
-    expect(result.output).toBe(["name,email,age", '"山田, 太郎",taro@example.com,'].join("\r\n"))
+    expect(result.output).toBe(["name,email,age", '"山田\n太郎",taro@example.com,'].join("\r\n"))
   })
 
   it("TSV で末尾セルが空でも列数がずれない（末尾のタブを削らない）", () => {
@@ -440,5 +467,16 @@ describe("ヘッダのエラーの上限", () => {
     if (result.ok) return
     expect(result.errors).toHaveLength(MAX_ERRORS)
     expect(result.errors.at(-1)?.message).toBe("ヘッダ: 「余計な項目10」は定義されていない項目です")
+  })
+})
+
+describe("カンマのエラーの上限", () => {
+  it("値のカンマのエラーが続いても 10 件で止まる", () => {
+    const input = ["項目\t備考", ...Array.from({ length: 12 }, () => "あ,い\tx")].join("\n")
+    const result = convertDelimitedText(input, [
+      { label: "項目", key: "v", usage: "required" },
+      { label: "備考", key: "n", usage: "optional" },
+    ])
+    expect(result.ok ? 0 : result.errors.length).toBe(MAX_ERRORS)
   })
 })
