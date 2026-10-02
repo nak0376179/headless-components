@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-10-02T01:19:22.055Z",
-  "commit": "168a34d",
+  "generatedAt": "2026-10-02T01:22:11.425Z",
+  "commit": "ff67f1b",
   "dirty": false,
   "totals": {
     "files": 6,
     "tests": 100,
     "passed": 100,
     "failed": 0,
-    "durationMs": 51
+    "durationMs": 47
   },
   "coverage": {
     "total": {
@@ -135,7 +135,7 @@
           "group": "入力画面の状態 (createCsvJson)",
           "title": "はじめは空の入力・JSON・未変換",
           "status": "passed",
-          "durationMs": 3,
+          "durationMs": 2,
           "failure": null
         },
         {
@@ -689,7 +689,7 @@
           "group": "README の「できること」",
           "title": "1. 列の並びは自由・任意の列は無くてよい・出力のキーは列定義の順",
           "status": "passed",
-          "durationMs": 5,
+          "durationMs": 4,
           "failure": null
         },
         {
@@ -825,7 +825,7 @@
           "group": "小さなストア (createStore)",
           "title": "set で値を差し替え、購読者に知らせる",
           "status": "passed",
-          "durationMs": 3,
+          "durationMs": 2,
           "failure": null
         },
         {
@@ -839,14 +839,14 @@
           "group": "小さなストア (createStore)",
           "title": "同じ値を set しても知らせない",
           "status": "passed",
-          "durationMs": 1,
+          "durationMs": 0,
           "failure": null
         },
         {
           "group": "小さなストア (createStore)",
           "title": "patch は一部のプロパティだけ差し替え、別のオブジェクトにする",
           "status": "passed",
-          "durationMs": 1,
+          "durationMs": 0,
           "failure": null
         },
         {
