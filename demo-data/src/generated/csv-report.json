@@ -1,0 +1,862 @@
+{
+  "generatedAt": "2026-10-02T01:19:22.055Z",
+  "commit": "168a34d",
+  "dirty": false,
+  "totals": {
+    "files": 6,
+    "tests": 100,
+    "passed": 100,
+    "failed": 0,
+    "durationMs": 51
+  },
+  "coverage": {
+    "total": {
+      "statements": {
+        "covered": 171,
+        "total": 171,
+        "pct": 100
+      },
+      "branches": {
+        "covered": 101,
+        "total": 101,
+        "pct": 100
+      },
+      "functions": {
+        "covered": 46,
+        "total": 46,
+        "pct": 100
+      },
+      "lines": {
+        "covered": 144,
+        "total": 144,
+        "pct": 100
+      }
+    },
+    "files": [
+      {
+        "file": "csv-json/controller.ts",
+        "statements": {
+          "covered": 34,
+          "total": 34,
+          "pct": 100
+        },
+        "branches": {
+          "covered": 14,
+          "total": 14,
+          "pct": 100
+        },
+        "functions": {
+          "covered": 11,
+          "total": 11,
+          "pct": 100
+        },
+        "lines": {
+          "covered": 30,
+          "total": 30,
+          "pct": 100
+        }
+      },
+      {
+        "file": "csv-json/convert.ts",
+        "statements": {
+          "covered": 92,
+          "total": 92,
+          "pct": 100
+        },
+        "branches": {
+          "covered": 65,
+          "total": 65,
+          "pct": 100
+        },
+        "functions": {
+          "covered": 14,
+          "total": 14,
+          "pct": 100
+        },
+        "lines": {
+          "covered": 74,
+          "total": 74,
+          "pct": 100
+        }
+      },
+      {
+        "file": "csv-json/validators.ts",
+        "statements": {
+          "covered": 29,
+          "total": 29,
+          "pct": 100
+        },
+        "branches": {
+          "covered": 18,
+          "total": 18,
+          "pct": 100
+        },
+        "functions": {
+          "covered": 14,
+          "total": 14,
+          "pct": 100
+        },
+        "lines": {
+          "covered": 28,
+          "total": 28,
+          "pct": 100
+        }
+      },
+      {
+        "file": "store.ts",
+        "statements": {
+          "covered": 16,
+          "total": 16,
+          "pct": 100
+        },
+        "branches": {
+          "covered": 4,
+          "total": 4,
+          "pct": 100
+        },
+        "functions": {
+          "covered": 7,
+          "total": 7,
+          "pct": 100
+        },
+        "lines": {
+          "covered": 12,
+          "total": 12,
+          "pct": 100
+        }
+      }
+    ]
+  },
+  "files": [
+    {
+      "file": "csv-json/controller.test.ts",
+      "tests": [
+        {
+          "group": "入力画面の状態 (createCsvJson)",
+          "title": "はじめは空の入力・JSON・未変換",
+          "status": "passed",
+          "durationMs": 3,
+          "failure": null
+        },
+        {
+          "group": "入力画面の状態 (createCsvJson)",
+          "title": "setText で入力を差し替える (変換はしない)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力画面の状態 (createCsvJson)",
+          "title": "変換結果をストアに載せて購読者に通知する",
+          "status": "passed",
+          "durationMs": 2,
+          "failure": null
+        },
+        {
+          "group": "入力画面の状態 (createCsvJson)",
+          "title": "変換済みなら形式の切り替えで出力を作りなおす",
+          "status": "passed",
+          "durationMs": 1,
+          "failure": null
+        },
+        {
+          "group": "入力画面の状態 (createCsvJson)",
+          "title": "同じ形式を選び直しても作りなおさない",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力画面の状態 (createCsvJson)",
+          "title": "列定義を差し替えると、変換済みなら新しい定義で変換しなおす",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力画面の状態 (createCsvJson)",
+          "title": "onConvert に結果を渡す",
+          "status": "passed",
+          "durationMs": 2,
+          "failure": null
+        },
+        {
+          "group": "変換結果のコピー (copyOutput)",
+          "title": "変換に成功していればクリップボードに書いて true",
+          "status": "passed",
+          "durationMs": 1,
+          "failure": null
+        },
+        {
+          "group": "変換結果のコピー (copyOutput)",
+          "title": "クリップボードに書けなければ false",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換結果のコピー (copyOutput)",
+          "title": "未変換・エラーのときは何もせず false",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "画面の文言",
+          "title": "エラー見出しは上限に達したら「件以上」",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "画面の文言",
+          "title": "結果の見出しは件数と形式を出す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "画面の文言",
+          "title": "入力欄の例は列定義の項目名を並べる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "画面の文言",
+          "title": "出力形式の選択肢は JSON・CSV・TSV",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        }
+      ]
+    },
+    {
+      "file": "csv-json/convert.test.ts",
+      "tests": [
+        {
+          "group": "変換の基本挙動",
+          "title": "CSV を JSON に変換できる（不要な列は削られる）",
+          "status": "passed",
+          "durationMs": 4,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "TSV も自動判別して変換できる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "入力の列順が違っても、キーは列定義の順に組みなおされる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "ヘッダとセルの前後の空白は取り除かれる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "省略可の列が入力にない場合は空文字で埋める",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "必須項目が空の行はエラーになる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "バリデーションエラーは行番号と項目名つきで返る",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "項目数が足りない行はエラーになる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "定義されていない項目名がヘッダにあるとエラーになる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "必須項目がヘッダにないとエラーになる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "エラーは最大10件で打ち切られる（11件目以降は出ない）",
+          "status": "passed",
+          "durationMs": 1,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "空行は読み飛ばし、行番号は貼り付けテキストの行のまま数える",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "空入力・データ行なしはエラーになる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "CSV 形式でも出力できる（キーは列定義の順）",
+          "status": "passed",
+          "durationMs": 1,
+          "failure": null
+        },
+        {
+          "group": "変換の基本挙動",
+          "title": "TSV 形式でも出力できる（タブ区切り・キーは列定義の順）",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "文字数バリデーション",
+          "title": "最大文字数を超えるとエラーになる（現在の文字数つき）",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "文字数バリデーション",
+          "title": "最小文字数を下回るとエラーになる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "文字数バリデーション",
+          "title": "文字数の範囲内なら変換できる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "文字数バリデーション",
+          "title": "省略可の列が空なら文字数チェックはされない",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "文字数バリデーション",
+          "title": "絵文字（サロゲートペア）も1文字として数える",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "文字数バリデーション",
+          "title": "文字数チェックは validate より先に走る",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "全角スペースも前後トリムされる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "値の途中の空白は保持される",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "空白だけの必須セルは空値扱いでエラーになる（半角・全角とも）",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "空白だけの省略可セルは空値として通る",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "項目が多すぎる行はエラーになる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "ヘッダの項目名が重複するとエラーになる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "ヘッダに空の項目名があるとエラーになる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "引用符で囲めば値の中のカンマは区切りにならない",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "CRLF 改行でも変換できる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "CSV 出力ではカンマを含む値が引用される",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "TSV で末尾セルが空でも列数がずれない（末尾のタブを削らない）",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "前後に空行があっても、ヘッダと行番号は先頭の非空行から数える",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "エラーの上限での打ち切り",
+          "title": "文字数の上限を超えるエラーが続いても 10 件で止まる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "エラーの上限での打ち切り",
+          "title": "文字数の下限を下回るエラーが続いても 10 件で止まる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "エラーの上限での打ち切り",
+          "title": "validate のエラーが続いても 10 件で止まる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "エラーの上限での打ち切り",
+          "title": "列数の誤りが続いても 10 件で止まる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "ヘッダのエラーの上限",
+          "title": "定義に無い項目名が 11 個以上あっても、エラーは 10 件まで",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        }
+      ]
+    },
+    {
+      "file": "csv-json/japanese.test.ts",
+      "tests": [
+        {
+          "group": "Excel からのコピー",
+          "title": "2 列 × 1 行の小さな表でもタブ区切りと分かる (行末は CRLF)",
+          "status": "passed",
+          "durationMs": 4,
+          "failure": null
+        },
+        {
+          "group": "Excel からのコピー",
+          "title": "セルの中の改行 (Alt+Enter) は引用符ごと 1 つの値になる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "Excel からのコピー",
+          "title": "UTF-8 の BOM が付いていても、先頭の項目名を読み違えない",
+          "status": "passed",
+          "durationMs": 1,
+          "failure": null
+        },
+        {
+          "group": "Excel からのコピー",
+          "title": "ヘッダの前後の全角スペースも取り除いて項目名を突き合わせる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "Excel からのコピー",
+          "title": "タブ区切りなら、値の中のカンマは区切りにならない",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "全角の読点「、」とカンマ「，」は区切りにならない",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "全角の引用符「“”」は引用符として扱わない (中のカンマで列が増えてエラー)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "全角スペース・ノーブレークスペースは前後から取り除き、途中は残す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "全角スペースだけの項目名は空の項目名としてエラー",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "全角スペースだけの行は空行として読み飛ばす",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "ゼロ幅スペース (Web からのコピーで混じる) は取り除かず、値に残る",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "文字数の数え方",
+          "title": "漢字・かなは 1 文字ずつ数える",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "文字数の数え方",
+          "title": "「𠮷」のようなサロゲートペアの漢字も 1 文字と数える",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "文字数の数え方",
+          "title": "濁点が分かれた文字 (Mac のファイル名などの NFD) は 2 文字と数える",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "文字数の数え方",
+          "title": "機種依存文字 (①・㈱・髙) はそのまま通す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角・半角の扱い (変換はせず、検査で弾く)",
+          "title": "全角数字は numeric() で弾く (半角に直さない)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角・半角の扱い (変換はせず、検査で弾く)",
+          "title": "全角英字のメールアドレスは email() で弾く",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角・半角の扱い (変換はせず、検査で弾く)",
+          "title": "半角カナのフリガナは zenkakuKatakana() で弾く",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角・半角の扱い (変換はせず、検査で弾く)",
+          "title": "項目名は全角・半角を区別する (半角カナの「ﾌﾘｶﾞﾅ」は別の項目)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "フリガナ・ひらがな",
+          "title": "長音符「ー」は全角カタカナとして通す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "フリガナ・ひらがな",
+          "title": "姓と名の間の全角スペース・中点「・」は zenkakuKatakana() では弾く",
+          "status": "passed",
+          "durationMs": 1,
+          "failure": null
+        },
+        {
+          "group": "フリガナ・ひらがな",
+          "title": "ひらがなのフリガナは zenkakuKatakana() で弾く",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "フリガナ・ひらがな",
+          "title": "hiragana() は長音符を含むひらがなを通す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角・半角の検査",
+          "title": "zenkaku() は全角を 1 文字でも含めば通す (「第1部」は通り、「ABC」は弾く)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角・半角の検査",
+          "title": "hankaku() は半角カナを通し、ひらがなは弾く",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        }
+      ]
+    },
+    {
+      "file": "csv-json/readme.test.ts",
+      "tests": [
+        {
+          "group": "README の「できること」",
+          "title": "1. 列の並びは自由・任意の列は無くてよい・出力のキーは列定義の順",
+          "status": "passed",
+          "durationMs": 5,
+          "failure": null
+        },
+        {
+          "group": "README の「できること」",
+          "title": "2. 前後の空白 (全角スペースも) を取り除き、途中の空白は残す",
+          "status": "passed",
+          "durationMs": 1,
+          "failure": null
+        },
+        {
+          "group": "README の「できること」",
+          "title": "3. 必須の列はヘッダに必要で、値も空にできない",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "README の「できること」",
+          "title": "3. 任意の列は空でよく、不要の列は出力から消える",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "README の「できること」",
+          "title": "4. 文字数と検査を重ねられ、combine で複数の検査を順に当てる (最初に引っかかった理由を返す)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "README の「できること」",
+          "title": "5. 1 行の中の複数列のエラーを列ごとに返す (1 セルにつき 1 件)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "README の「できること」",
+          "title": "5. エラーは全体で最大 10 件まで (行・列をまたいで数える)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "README の「できること」",
+          "title": "5. ヘッダに誤りがあれば、データ行は検査しない",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        }
+      ]
+    },
+    {
+      "file": "csv-json/validators.test.ts",
+      "tests": [
+        {
+          "group": "バリデータ・ビルダー",
+          "title": "全角チェックは全角を含めば通し、半角の混在も許可する",
+          "status": "passed",
+          "durationMs": 2,
+          "failure": null
+        },
+        {
+          "group": "バリデータ・ビルダー",
+          "title": "半角チェックは半角のみ通す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "バリデータ・ビルダー",
+          "title": "全角カタカナチェックは全角カタカナ（＋長音符）のみ通す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "バリデータ・ビルダー",
+          "title": "ひらがなチェックはひらがな（＋長音符）のみ通す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "バリデータ・ビルダー",
+          "title": "数値チェックは半角数字のみ通す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "バリデータ・ビルダー",
+          "title": "メールチェックはメール形式のみ通す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "バリデータ・ビルダー",
+          "title": "候補チェック（oneOf）は候補のいずれかのみ通す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "バリデータ・ビルダー",
+          "title": "正規表現チェック（pattern）は任意の正規表現でチェックできる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "バリデータ・ビルダー",
+          "title": "合成チェック（combine）は最初に失敗したバリデータのメッセージを返す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "バリデータ・ビルダー",
+          "title": "メッセージは引数で差し替えられる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        }
+      ]
+    },
+    {
+      "file": "store.test.ts",
+      "tests": [
+        {
+          "group": "小さなストア (createStore)",
+          "title": "set で値を差し替え、購読者に知らせる",
+          "status": "passed",
+          "durationMs": 3,
+          "failure": null
+        },
+        {
+          "group": "小さなストア (createStore)",
+          "title": "set に関数を渡すと、前の値から次の値を作る",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "小さなストア (createStore)",
+          "title": "同じ値を set しても知らせない",
+          "status": "passed",
+          "durationMs": 1,
+          "failure": null
+        },
+        {
+          "group": "小さなストア (createStore)",
+          "title": "patch は一部のプロパティだけ差し替え、別のオブジェクトにする",
+          "status": "passed",
+          "durationMs": 1,
+          "failure": null
+        },
+        {
+          "group": "小さなストア (createStore)",
+          "title": "購読を解除すると、それ以降は知らせない",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        }
+      ]
+    }
+  ]
+}

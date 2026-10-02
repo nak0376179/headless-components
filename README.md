@@ -116,6 +116,14 @@ pnpm vendor <アプリのディレクトリ> --check       # 取り込んだ後�
 - **取り込んだファイルは編集しない。** 直すときはこのリポジトリを直して取り込み直す。取り込み記録
   （`src/utils/.vendored.json`）に無い同名のファイル（アプリのコード）があれば上書きせず止まる。
 
+## 公開しているデモ
+
+- React + MUI: <https://hc-react-demo.pages.dev>
+- Nuxt + Vuetify: <https://hc-nuxt-demo.pages.dev>
+
+CSV/TSV のタブで、デモのほかに「機能と使い方」「詳しい仕様」「テスト結果 (カバレッジ)」が見られる。
+出し直すときは `pnpm deploy:demos` (テストを流してから両方をビルドして Cloudflare Pages へ)。
+
 ## 開発
 
 ```bash

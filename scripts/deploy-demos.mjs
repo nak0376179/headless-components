@@ -23,6 +23,8 @@ const dryRun = process.argv.includes("--dry-run")
 const run = (command, env = {}) =>
   execSync(command, { cwd: ROOT, stdio: "inherit", env: { ...process.env, ...env } })
 
+// CSV/TSV の「テスト結果」のページに載せる結果を、今のコードで取り直す (失敗していたら公開しない)
+run("node scripts/csv-report.mjs")
 // 右上の「もう一方の版」のリンクを、公開先どうしに向けてビルドする
 run("pnpm --filter hc-react build", { VITE_NUXT_URL: url("nuxt") })
 run("pnpm --filter hc-nuxt build", { NUXT_PUBLIC_REACT_URL: url("react") })

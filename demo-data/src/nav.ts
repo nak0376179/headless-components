@@ -22,7 +22,12 @@ export const NAV: NavTab[] = [
   {
     slug: "csv-json",
     label: "📋 CSV/TSV → JSON",
-    pages: [{ slug: "convert", label: "📋 CSV/TSV → JSON" }],
+    pages: [
+      { slug: "convert", label: "▶ デモ" },
+      { slug: "readme", label: "📘 機能と使い方" },
+      { slug: "spec", label: "📖 詳しい仕様" },
+      { slug: "tests", label: "✅ テスト結果" },
+    ],
   },
   {
     slug: "datatable",

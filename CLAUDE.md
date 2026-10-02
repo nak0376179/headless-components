@@ -32,6 +32,13 @@ CSV/TSV 変換の使い方と仕様は [utils/src/csv-json/README.md](utils/src/
 - そのため **csv-json は `papaparse`・`../store`・同じフォルダ以外を import しない** (`utils/handoff.test.ts` が検査する)。React / Vue のコードも入れない。
 - `utils/src/csv-json/README.md` のコード例は `<!-- file: … -->` で実ファイル (`react/src/demo/usage/csv-json/*`・`nuxt/src/demo/usage/csv-json/*`。型検査を通る) を埋め込んでいる。例を直したら `pnpm handoff --sync` (ずれていると `handoff.test.ts` が落ちる)。
 - 渡した後に直すときは、このリポジトリを直して書き出し直す。
+- デモの CSV/TSV のタブには「機能と使い方」(README.md)・「詳しい仕様」(SPEC.md)・「テスト結果」の小タブがある。文書は同じファイルを `demo-data/src/csvDocs.ts` が `?raw` で読んで marked で HTML にする (デモ用に別の文章を書かない)。テスト結果は `pnpm csv:report` が書く `demo-data/src/generated/csv-report.json` (コミットする。テストを足したら作り直す)。
+
+## 公開 (出先から見る)
+
+- `pnpm deploy:demos` で https://hc-react-demo.pages.dev と https://hc-nuxt-demo.pages.dev (Cloudflare Pages、静的な SPA) に出す。最初に `csv:report` を流すので、載るテスト結果はその時点のもの。
+- 右上の「もう一方の版」のリンクは、ビルド時の `VITE_NUXT_URL` / `NUXT_PUBLIC_REACT_URL` で公開先どうしに向く。
+- wrangler 4.14x は Pages を Workers に回そうとしてワークスペースのルートで失敗するので、プロジェクトは `pages project create --force` で作った (以後の deploy に --force は要らない)。
 
 ## 構成・コマンド
 
