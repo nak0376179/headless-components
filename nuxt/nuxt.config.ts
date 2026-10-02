@@ -26,8 +26,8 @@ export default defineNuxtConfig({
     // ⚠ Nuxt の別名は "@" (= src) が先に並ぶので、そのままだと "@/utils" が src/utils を探しに行く。
     //   共有の utils を指す別名を先頭に並べ直す (取り込み先のアプリは src/utils が実在するので要らない)。
     "vite:extendConfig"(config) {
-      const resolve = (config.resolve ??= {})
-      resolve.alias = { ...aliases, ...(resolve.alias as Record<string, string>) }
+      const resolve = config.resolve as { alias?: Record<string, string> } | undefined
+      if (resolve) resolve.alias = { ...aliases, ...resolve.alias }
     },
   },
   devServer: { port: 5211 },
