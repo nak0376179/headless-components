@@ -26,7 +26,7 @@ const router = createBrowserRouter([
   { Component: DemoLayout, children: [...pageRoutes, { path: "*", Component: Fallback }] },
 ])
 
-// サーバーページネーション・無限スクロールの取得とキャッシュ (core の部品も useAppQueryClient でこれを使う)。
+// サーバーページネーション・無限スクロールの取得とキャッシュ (utils の部品も useAppQueryClient でこれを使う)。
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, refetchOnWindowFocus: false } },
 })

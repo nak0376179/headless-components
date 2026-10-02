@@ -7,14 +7,14 @@ export default defineNuxtConfig({
   srcDir: "src/",
   // SPA (SSR はしない)。build は nuxt generate で静的な .output/public を作る。
   ssr: false,
-  // core / demo-data はコピーせず、ここから別名で参照する (tsconfig の paths も Nuxt が作る)。
+  // utils / demo-data はコピーせず、ここから別名で参照する (tsconfig の paths も Nuxt が作る)。
   alias: aliases,
   css: ["vuetify/styles", "@mdi/font/css/materialdesignicons.css"],
   build: { transpile: ["vuetify"] },
   // components/ の .ts (RenderValue・テスト) はコンポーネントとして登録しない。
   components: [{ path: "~/components", extensions: ["vue"] }],
   typescript: {
-    // リポジトリ全体 (tsconfig.base.json) とそろえる。core / demo-data もこの設定で検査される。
+    // リポジトリ全体 (tsconfig.base.json) とそろえる。utils / demo-data もこの設定で検査される。
     tsConfig: {
       compilerOptions: {
         noUncheckedIndexedAccess: false,

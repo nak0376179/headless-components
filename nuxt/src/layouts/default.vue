@@ -36,7 +36,7 @@ const toggleTheme = () => theme.change(theme.current.value.dark ? "light" : "dar
         variant="text"
         size="small"
         :href="`http://localhost:5210${route.path}`"
-        title="同じ core を React + MUI で包んだ版"
+        title="同じ utils を React + MUI で包んだ版"
       >
         React 版 ↗
       </v-btn>

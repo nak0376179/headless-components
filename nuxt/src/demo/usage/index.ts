@@ -20,6 +20,7 @@ import csvComponent from "./csv-json/Component.vue?raw"
 import csvControl from "./csv-json/Control.vue?raw"
 import csvHeadless from "./csv-json/Headless.vue?raw"
 import csvCoreOnly from "./csv-json/core-only.ts?raw"
+import csvPlain from "./csv-json/Plain.vue?raw"
 import dtColumns from "./datatable/columns.ts?raw"
 import dtComponent from "./datatable/Component.vue?raw"
 import dtHeadless from "./datatable/Headless.vue?raw"
@@ -169,6 +170,13 @@ export const usageBySlug: Record<string, UsageBlock[]> = {
       lang: "ts",
       file: "convert.ts",
       code: csvCoreOnly,
+    },
+    {
+      title: "6. utils だけで画面を作る (UI ライブラリなし)",
+      note: "別チームに渡すときは utils フォルダだけ (pnpm handoff で書き出す)。Vue / Nuxt だけで、この画面が作れる。",
+      lang: "vue",
+      file: "CsvImport.vue",
+      code: csvPlain,
     },
   ],
   client: [

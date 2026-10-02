@@ -2,7 +2,7 @@
   "name": "hc-nuxt",
   "private": true,
   "type": "module",
-  "description": "Nuxt + Vuetify 版 (SPA) (components = Vuetify で包んだ部品 / composables = core を Vue で使う composable / pages = デモ)",
+  "description": "Nuxt + Vuetify 版 (SPA) (components = Vuetify で包んだ部品 / composables = utils を Vue で使う composable / pages = デモ)",
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt generate",

@@ -4,7 +4,7 @@
 // - 取得・キャッシュ・古い応答の破棄・再取得は TanStack Query (@tanstack/query-core) に任せる。
 //   同じ検索に戻ったときや「前へ」は、取り直さずキャッシュから出る。
 // - QueryClient はアプリのもの (React は @tanstack/react-query、Vue は @tanstack/vue-query の useQueryClient())
-//   を渡すと、invalidateQueries などがアプリの他の部分と効き合う。渡さなければ core 内の共有の 1 つを使う。
+//   を渡すと、invalidateQueries などがアプリの他の部分と効き合う。渡さなければ utils 内の共有の 1 つを使う。
 // - Observer を購読する (= 取りに行く) のは、ストアの購読者がいる間だけ。React の StrictMode のように
 //   購読→解除→再購読が起きても、同じコントローラを使い続けられる。サーバー (SSR) では取りに行かない。
 import {
@@ -22,7 +22,7 @@ export type { CursorPage, FetchPage, PageRequest }
 
 /** TanStack Query に渡す設定 (createCursorPager / createInfiniteList 共通)。 */
 export interface CursorQueryOptions {
-  /** アプリの QueryClient。省略時は core 内の共有のもの。 */
+  /** アプリの QueryClient。省略時は utils 内の共有のもの。 */
   queryClient?: QueryClient
   /**
    * キャッシュの鍵の頭。同じ API を別の画面で読むなら揃えるとキャッシュを共有でき、
@@ -34,7 +34,7 @@ export interface CursorQueryOptions {
 }
 
 let sharedClient: QueryClient | undefined
-/** queryClient を渡さなかったときに使う、core 内で共有の QueryClient。 */
+/** queryClient を渡さなかったときに使う、utils 内で共有の QueryClient。 */
 export function getDefaultQueryClient(): QueryClient {
   return (sharedClient ??= new QueryClient({
     defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },

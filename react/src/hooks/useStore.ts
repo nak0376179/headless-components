@@ -1,4 +1,4 @@
-// core のストア (ReadableStore) を React から購読する土台。他のフックはこれの上に乗る。
+// utils のストア (ReadableStore) を React から購読する土台。他のフックはこれの上に乗る。
 // 見た目は持たない (MUI で包んだものは components/)。
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react"
 import type { ReadableStore } from "@/utils"

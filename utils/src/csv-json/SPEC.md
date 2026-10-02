@@ -1,7 +1,8 @@
 # CSV/TSV 変換 仕様
 
-`packages/core/src/csv-json/convert.ts` の `convertDelimitedText` の挙動仕様。UI には依存しない
-ヘッドレスなロジックで、この仕様がそのまま MUI 版・Vuetify 版の `CsvJsonTextArea` の振る舞いになる。
+同じフォルダの `convert.ts` にある `convertDelimitedText` の挙動仕様。UI には依存しない
+ロジックなので、React / Next.js / Vue / Nuxt のどれで使っても同じ振る舞いになる。
+使い方は [README.md](README.md)、この仕様を確かめるテストは `convert.test.ts`。
 
 ## エントリポイント
 
@@ -117,7 +118,7 @@ interface ConvertError {
 
 ## よく使うバリデータ（ビルダー）
 
-`validate` に毎回正規表現を書かなくて済むよう、よく使うチェックを `packages/core/src/csv-json/validators.ts`
+`validate` に毎回正規表現を書かなくて済むよう、よく使うチェックを 同じフォルダの `validators.ts`
 にビルダー関数として用意している（バレル `csv-json` からも re-export）。いずれも `ColumnValidator`
 を返し、`ColumnSpec.validate` にそのまま渡せる。メッセージは第 1 引数で差し替えられる。
 

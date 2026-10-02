@@ -42,7 +42,7 @@ export function DemoLayout() {
           <Button
             size="small"
             href={`http://localhost:5211${pathname}`}
-            title="同じ core を Nuxt + Vuetify で包んだ版"
+            title="同じ utils を Nuxt + Vuetify で包んだ版"
           >
             Nuxt 版 ↗
           </Button>

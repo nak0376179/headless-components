@@ -1,5 +1,5 @@
 // TanStack Query (サーバーページネーション・無限スクロールの取得とキャッシュ)。
-// core の部品も useAppQueryClient でこれを使う。
+// utils の部品も useAppQueryClient でこれを使う。
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query"
 
 export default defineNuxtPlugin((nuxtApp) => {

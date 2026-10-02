@@ -1,4 +1,4 @@
-// core のストア (ReadableStore) を Vue から購読する土台。他の composable はこれの上に乗る。
+// utils のストア (ReadableStore) を Vue から購読する土台。他の composable はこれの上に乗る。
 // 見た目は持たない (Vuetify で包んだものは components/)。
 import {
   getCurrentScope,

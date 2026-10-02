@@ -21,5 +21,5 @@
     "react-dom": "^19.2.7",
     "react-router": "^8.4.0"
   },
-  "description": "React + MUI 版 (components = MUI で包んだ部品 / hooks = core を React で使うフック / pages = デモ)"
+  "description": "React + MUI 版 (components = MUI で包んだ部品 / hooks = utils を React で使うフック / pages = デモ)"
 }
