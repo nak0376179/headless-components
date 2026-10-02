@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
-// @core の createDataTable (TanStack Table) を Vuetify で描く汎用データテーブル。
+// @/utils の createDataTable (TanStack Table) を Vuetify で描く汎用データテーブル。
 import { computed } from "vue"
-import { paginationSummary, PAGE_SIZE_OPTIONS, type DataTableColumn } from "@core"
+import { paginationSummary, PAGE_SIZE_OPTIONS, type DataTableColumn } from "@/utils"
 import { useDataTable } from "@/composables/useDataTable"
 import TableView from "./TableView.vue"
 
@@ -12,8 +12,21 @@ const props = withDefaults(
     initialPageSize?: number
     searchPlaceholder?: string
     getRowId?: (row: T, index: number) => string
+    /** 取得中 (TanStack Query の isFetching など)。データがまだ無ければ表の中に、あれば上端に出す。 */
+    loading?: boolean
+    /** 取得の失敗 (表の上に出す)。 */
+    error?: string | null
+    /** 「再試行」を押したとき (@retry で渡す。refetch など)。無ければボタンを出さない。 */
+    onRetry?: () => void
   }>(),
-  { initialPageSize: 10, searchPlaceholder: "検索…", getRowId: undefined },
+  {
+    initialPageSize: 10,
+    searchPlaceholder: "検索…",
+    getRowId: undefined,
+    loading: false,
+    error: null,
+    onRetry: undefined,
+  },
 )
 
 const { table, state } = useDataTable<T>({
@@ -33,7 +46,13 @@ const pageCount = computed(() =>
 </script>
 
 <template>
-  <v-card border flat>
+  <v-card border flat :loading="loading && data.length > 0">
+    <v-alert v-if="error" type="error" variant="tonal" density="compact" class="ma-4 mb-0">
+      {{ error }}
+      <template v-if="onRetry" #append>
+        <v-btn size="small" variant="text" @click="onRetry()">再試行</v-btn>
+      </template>
+    </v-alert>
     <div class="pa-4">
       <v-text-field
         :model-value="state.state.globalFilter ?? ''"
@@ -45,7 +64,7 @@ const pageCount = computed(() =>
         @update:model-value="(v: string) => table.setGlobalFilter(v)"
       />
     </div>
-    <TableView :table="table" :version="state" />
+    <TableView :table="table" :version="state" :loading="loading && data.length === 0" />
     <div class="footer">
       <span class="text-body-2 text-medium-emphasis">表示件数:</span>
       <v-select

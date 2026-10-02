@@ -1,6 +1,6 @@
 import { h } from "vue"
 import { VChip } from "vuetify/components"
-import { createColumnHelper } from "@core"
+import { createColumnHelper } from "@/utils"
 import {
   EMPLOYEE_HEADERS as H,
   STATUS_COLOR,

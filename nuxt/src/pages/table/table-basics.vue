@@ -2,8 +2,9 @@
 // useDataTable (TanStack Table) で、選択・展開・並べ替え・検索・ページングを組む。
 // 見た目は Vuetify の v-table を自分で並べる (完成品の DataTable では足りないとき用)。
 import { computed, ref } from "vue"
-import { createDialogs, paginationSummary, resolveTemplate, PAGE_SIZE_OPTIONS } from "@core"
-import DialogHost from "@/components/DialogHost.vue"
+import { paginationSummary, resolveTemplate, PAGE_SIZE_OPTIONS } from "@/utils"
+import { createDialogs } from "@/utils/draft"
+import DialogHost from "@/components/draft/DialogHost.vue"
 import RenderValue from "@/components/RenderValue"
 import { useDataTable } from "@/composables/useDataTable"
 import { formatSalary, generateEmployees, STATUS_LABEL, type Employee } from "@demo-data"

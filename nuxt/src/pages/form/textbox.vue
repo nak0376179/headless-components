@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import { email, maxChars, pattern, required, whenFilled, zenkakuKatakana } from "@core"
-import { useForm } from "@/composables/useForm"
+import { email, pattern, zenkakuKatakana } from "@/utils"
+import { maxChars, required, whenFilled } from "@/utils/draft"
+import { useForm } from "@/composables/draft/useForm"
 import FormShell from "@/demo/FormShell.vue"
 import { fakeSave } from "@/demo/fakeSave"
 

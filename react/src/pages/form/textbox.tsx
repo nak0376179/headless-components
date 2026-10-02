@@ -1,7 +1,8 @@
 import { useState, type ChangeEvent } from "react"
 import { InputAdornment, Stack, TextField } from "@mui/material"
-import { email, maxChars, pattern, required, whenFilled, zenkakuKatakana } from "@core"
-import { useForm } from "@/hooks/useForm"
+import { email, pattern, zenkakuKatakana } from "@/utils"
+import { maxChars, required, whenFilled } from "@/utils/draft"
+import { useForm } from "@/hooks/draft/useForm"
 import { FormShell, fakeSave } from "@/demo/FormShell"
 
 type Profile = {

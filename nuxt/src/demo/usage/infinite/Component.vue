@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { CursorPage, PageRequest } from "@core"
-import InfiniteTable from "@/components/InfiniteTable.vue"
+import type { CursorPage, PageRequest } from "@/utils"
+import InfiniteTable from "@/components/draft/InfiniteTable.vue"
 import { columns, type Employee } from "../datatable/columns"
 
 // fetchPage はサーバーページネーションと同じ形。そのまま無限スクロールにも使える。

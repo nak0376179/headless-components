@@ -1,9 +1,9 @@
 import { createRef } from "react"
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
-import { createColumnHelper, createMemorySource, type ColumnSpec } from "@core"
+import { createColumnHelper, createMemorySource, type ColumnSpec } from "@/utils"
 import { CsvJsonTextArea, type CsvJsonTextAreaHandle } from "./CsvJsonTextArea"
-import { CursorTable } from "./CursorTable"
+import { CursorTable } from "./draft/CursorTable"
 import { DataTable } from "./DataTable"
 
 const csvColumns: ColumnSpec[] = [

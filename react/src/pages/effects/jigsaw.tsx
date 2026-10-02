@@ -1,4 +1,4 @@
-import { JigsawPuzzle } from "@/components/effects/JigsawPuzzle"
+import { JigsawPuzzle } from "@/components/draft/effects/JigsawPuzzle"
 import { DemoPage } from "@/demo/DemoPage"
 
 export default function JigsawPage() {

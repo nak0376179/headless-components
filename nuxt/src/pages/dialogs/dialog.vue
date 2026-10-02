@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import { createDialogs, email, required, whenFilled } from "@core"
-import DialogHost from "@/components/DialogHost.vue"
-import { useForm } from "@/composables/useForm"
+import { email } from "@/utils"
+import { createDialogs, required, whenFilled } from "@/utils/draft"
+import DialogHost from "@/components/draft/DialogHost.vue"
+import { useForm } from "@/composables/draft/useForm"
 
 // アプリで 1 つ作って使い回す (普通はアプリの一番外側に <DialogHost :dialogs="dialogs" /> を置く)。
 const dialogs = createDialogs()

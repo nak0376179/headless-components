@@ -1,6 +1,7 @@
 import { TextField, Button } from "@mui/material"
-import { email, maxChars, required, whenFilled } from "@core"
-import { useForm } from "@/hooks/useForm"
+import { email } from "@/utils"
+import { maxChars, required, whenFilled } from "@/utils/draft"
+import { useForm } from "@/hooks/draft/useForm"
 
 type Values = { name: string; email: string }
 

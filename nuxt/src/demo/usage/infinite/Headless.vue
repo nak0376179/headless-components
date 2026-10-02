@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
-import { createMemorySource, virtualWindow } from "@core"
-import { useInfiniteList } from "@/composables/useInfiniteList"
+import { createMemorySource } from "@/utils"
+import { virtualWindow } from "@/utils/draft"
+import { useInfiniteList } from "@/composables/draft/useInfiniteList"
 
 type Message = { id: string; text: string }
 const source = createMemorySource<Message>({

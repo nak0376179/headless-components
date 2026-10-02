@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Pixelate from "@/components/effects/Pixelate.vue"
+import Pixelate from "@/components/draft/effects/Pixelate.vue"
 import DemoPage from "@/demo/DemoPage.vue"
 </script>
 

@@ -81,18 +81,6 @@ importers:
         specifier: ^3.0.0
         version: 3.3.11(typescript@5.9.3)
 
-  core:
-    dependencies:
-      '@tanstack/query-core':
-        specifier: ^5.104.0
-        version: 5.104.0
-      '@tanstack/table-core':
-        specifier: ^8.21.3
-        version: 8.21.3
-      papaparse:
-        specifier: ^5.5.4
-        version: 5.7.0
-
   demo-data: {}
 
   nuxt:
@@ -157,6 +145,18 @@ importers:
       react-router:
         specifier: ^8.4.0
         version: 8.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+
+  utils:
+    dependencies:
+      '@tanstack/query-core':
+        specifier: ^5.104.0
+        version: 5.104.0
+      '@tanstack/table-core':
+        specifier: ^8.21.3
+        version: 8.21.3
+      papaparse:
+        specifier: ^5.5.4
+        version: 5.7.0
 
 packages:
 

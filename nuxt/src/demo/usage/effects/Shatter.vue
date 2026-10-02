@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ShatterGlass from "@/components/effects/ShatterGlass.vue"
+import ShatterGlass from "@/components/draft/effects/ShatterGlass.vue"
 // クリックした所からガラスのように割る。破片はドラッグでき、「元に戻す」で直る。
 </script>
 

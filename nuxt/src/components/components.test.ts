@@ -4,9 +4,9 @@ import { describe, expect, it } from "vitest"
 import { createVuetify } from "vuetify"
 import * as components from "vuetify/components"
 import * as directives from "vuetify/directives"
-import { createColumnHelper, createMemorySource, type ColumnSpec } from "@core"
+import { createColumnHelper, createMemorySource, type ColumnSpec } from "@/utils"
 import CsvJsonTextArea from "./CsvJsonTextArea.vue"
-import CursorTable from "./CursorTable.vue"
+import CursorTable from "./draft/CursorTable.vue"
 import DataTable from "./DataTable.vue"
 
 const vuetify = createVuetify({ components, directives })

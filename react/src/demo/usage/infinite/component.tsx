@@ -1,5 +1,5 @@
-import type { CursorPage, PageRequest } from "@core"
-import { InfiniteTable } from "@/components/InfiniteTable"
+import type { CursorPage, PageRequest } from "@/utils"
+import { InfiniteTable } from "@/components/draft/InfiniteTable"
 import { columns, type Employee } from "../datatable/columns"
 
 // fetchPage はサーバーページネーションと同じ形。そのまま無限スクロールにも使える。

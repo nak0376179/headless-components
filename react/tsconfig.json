@@ -5,8 +5,8 @@
     "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
     "paths": {
       "@/*": ["./src/*"],
-      "@core": ["../core/src"],
-      "@core/*": ["../core/src/*"],
+      "@/utils": ["../utils/src"],
+      "@/utils/*": ["../utils/src/*"],
       "@demo-data": ["../demo-data/src"]
     }
   },

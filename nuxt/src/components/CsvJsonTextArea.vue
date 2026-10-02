@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // CSV/TSV を貼り付けて JSON / CSV / TSV に変換するテキストエリア (Vuetify)。
-// 状態と変換は @core の createCsvJson が持ち、ここは描くだけ。
+// 状態と変換は @/utils の createCsvJson が持ち、ここは描くだけ。
 import { computed, watch } from "vue"
 import {
   csvJsonErrorHeading,
@@ -10,7 +10,7 @@ import {
   type ColumnSpec,
   type ConvertResult,
   type OutputFormat,
-} from "@core"
+} from "@/utils"
 import { useCsvJson } from "@/composables/useCsvJson"
 
 const props = withDefaults(

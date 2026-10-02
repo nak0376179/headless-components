@@ -1,5 +1,5 @@
 import { Chip } from "@mui/material"
-import { createColumnHelper } from "@core"
+import { createColumnHelper } from "@/utils"
 import {
   EMPLOYEE_HEADERS as H,
   STATUS_COLOR,

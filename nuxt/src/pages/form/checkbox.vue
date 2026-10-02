@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
-import { countBetween, toggleInList } from "@core"
-import { useForm } from "@/composables/useForm"
+import { countBetween, toggleInList } from "@/utils/draft"
+import { useForm } from "@/composables/draft/useForm"
 import { HOBBIES } from "@demo-data"
 import FormShell from "@/demo/FormShell.vue"
 import { fakeSave } from "@/demo/fakeSave"

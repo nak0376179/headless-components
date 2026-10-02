@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { Alert, Box, Button, Paper, Stack, Typography } from "@mui/material"
-import type { FormController, FormState } from "@core"
+import type { FormController, FormState } from "@/utils/draft"
 
 /** フォームのデモの共通枠: 見出し・本体・送信ボタン・いまの値 (JSON)・送信結果。 */
 export function FormShell<T extends object>({

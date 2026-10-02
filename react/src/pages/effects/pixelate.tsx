@@ -1,4 +1,4 @@
-import { Pixelate } from "@/components/effects/Pixelate"
+import { Pixelate } from "@/components/draft/effects/Pixelate"
 import { DemoPage } from "@/demo/DemoPage"
 
 export default function PixelatePage() {

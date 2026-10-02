@@ -1,5 +1,5 @@
-import type { CursorPage, PageRequest } from "@core"
-import { CursorTable } from "@/components/CursorTable"
+import type { CursorPage, PageRequest } from "@/utils"
+import { CursorTable } from "@/components/draft/CursorTable"
 import { columns, type Employee } from "../datatable/columns"
 
 // 1 ページずつサーバーへ取りに行く (カーソル方式。DynamoDB の LastEvaluatedKey と同じ形)。

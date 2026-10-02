@@ -43,7 +43,15 @@ const toggleTheme = () => theme.change(theme.current.value.dark ? "light" : "dar
       <v-btn icon="mdi-theme-light-dark" aria-label="テーマ切り替え" @click="toggleTheme" />
       <template #extension>
         <v-tabs :model-value="tab.slug" show-arrows @update:model-value="goTab">
-          <v-tab v-for="t in NAV" :key="t.slug" :value="t.slug">{{ t.label }}</v-tab>
+          <template v-for="(t, i) in NAV" :key="t.slug">
+            <!-- main と draft の境目に見出しを置く (押せない) -->
+            <v-tab v-if="t.draft && !NAV[i - 1]?.draft" disabled class="px-2" style="min-width: 0">
+              🧪 Draft
+            </v-tab>
+            <v-tab :value="t.slug" :class="t.draft ? 'draft-tab' : 'font-weight-bold'">
+              {{ t.label }}
+            </v-tab>
+          </template>
         </v-tabs>
       </template>
     </v-app-bar>
@@ -60,9 +68,19 @@ const toggleTheme = () => theme.change(theme.current.value.dark ? "light" : "dar
         <v-tab v-for="p in tab.pages" :key="p.slug" :value="p.slug">{{ p.label }}</v-tab>
       </v-tabs>
       <v-container class="py-8" style="max-width: 1200px">
+        <v-alert v-if="tab.draft" type="info" variant="outlined" density="compact" class="mb-6">
+          🧪 Draft — main (CSV/TSV → JSON・データテーブル) 以外の試作。仕様は変わりうるし、pnpm
+          vendor の既定では取り込まない (--draft で取り込む)。
+        </v-alert>
         <slot />
         <UsageSection :key="`usage-${page.slug}`" :slug="page.slug" />
       </v-container>
     </v-main>
   </v-app>
 </template>
+
+<style scoped>
+.draft-tab {
+  opacity: 0.75;
+}
+</style>

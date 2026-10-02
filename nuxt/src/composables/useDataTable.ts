@@ -1,5 +1,5 @@
 import { toValue, watch, type MaybeRefOrGetter } from "vue"
-import { createDataTable, type DataTableColumn, type DataTableOptions } from "@core"
+import { createDataTable, type DataTableColumn, type DataTableOptions } from "@/utils"
 import { useStore } from "@/composables/useStore"
 
 export interface UseDataTableOptions<T> extends Omit<DataTableOptions<T>, "data" | "columns"> {

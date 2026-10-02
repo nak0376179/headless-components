@@ -1,4 +1,4 @@
-import { convertDelimitedText, type ColumnSpec } from "@core"
+import { convertDelimitedText, type ColumnSpec } from "@/utils"
 
 // UI なしで変換だけ (サーバーへ送る前の検査・テストなど)。区切りは CSV / TSV を自動判定する。
 const columns: ColumnSpec[] = [

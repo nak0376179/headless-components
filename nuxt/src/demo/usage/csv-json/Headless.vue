@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { csvJsonErrorHeading, csvJsonResultHeading, OUTPUT_FORMATS, type OutputFormat } from "@core"
+import {
+  csvJsonErrorHeading,
+  csvJsonResultHeading,
+  OUTPUT_FORMATS,
+  type OutputFormat,
+} from "@/utils"
 import { useCsvJson } from "@/composables/useCsvJson"
 import { columns } from "./columns"
 

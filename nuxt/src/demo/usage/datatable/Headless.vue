@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
-import { paginationSummary } from "@core"
+import { paginationSummary } from "@/utils"
 import { useDataTable } from "@/composables/useDataTable"
 import { columns, type Employee } from "./columns"
 

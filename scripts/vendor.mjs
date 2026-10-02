@@ -1,19 +1,20 @@
 #!/usr/bin/env node
-// core と部品をアプリにコピーして取り込む (vendoring)。npm には出していないので、これで配る。
+// utils と部品をアプリにコピーして取り込む (vendoring)。npm には出していないので、これで配る。
 //
 //   pnpm vendor <アプリのディレクトリ> --ui react       # React + MUI のアプリ
 //   pnpm vendor <アプリのディレクトリ> --ui nuxt        # Nuxt (Vue) + Vuetify のアプリ
 //   pnpm vendor <アプリのディレクトリ> --check          # 取り込んだ後に手で書き換えられていないか
+//   --draft     draft (フォーム・ダイアログ・演出・サーバーページネーション…) も取り込む (既定は main だけ)
 //   --dry-run   書き込まずに何をするかだけ表示
 //
 // このリポジトリと同じ場所に置く:
-//   core/src/            → <アプリ>/src/core/
+//   utils/src/           → <アプリ>/src/utils/
 //   react/src/components → <アプリ>/src/components/   (nuxt なら nuxt/src/components)
 //   react/src/hooks      → <アプリ>/src/hooks/        (nuxt なら nuxt/src/composables)
-// 部品の import は `@core/...` と `@/hooks/...` のままなので、アプリに別名 `@core` → src/core と
-// `@` → src を張る (Nuxt は `@` が最初からある)。足りなければ表示する。
+// 部品の import は `@/utils/...` と `@/hooks/...` なので、アプリに `@` → src の別名があればそのまま通る
+// (Nuxt は最初からある)。無ければ表示する。
 // **取り込んだファイルは編集しない** (直すならこのリポジトリを直して取り込み直す)。
-// 取り込み直しは前回の分を消して入れ替える。取り込み記録 (src/core/.vendored.json) に無い同名ファイル
+// 取り込み直しは前回の分を消して入れ替える。取り込み記録 (src/utils/.vendored.json) に無い同名ファイル
 // (アプリのコード) があれば上書きせず中止する。
 import { createHash } from "node:crypto"
 import { execFileSync } from "node:child_process"
@@ -22,17 +23,17 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
-const MANIFEST = "core/.vendored.json" // アプリの src/ からの相対
-const README = "core/VENDORED.md"
+const MANIFEST = "utils/.vendored.json" // アプリの src/ からの相対
+const README = "utils/VENDORED.md"
 /** 取り込む元 (リポジトリの相対) → アプリの src/ の中の置き場所。 */
 const LAYOUTS = {
   react: [
-    ["core/src", "core"],
+    ["utils/src", "utils"],
     ["react/src/components", "components"],
     ["react/src/hooks", "hooks"],
   ],
   nuxt: [
-    ["core/src", "core"],
+    ["utils/src", "utils"],
     ["nuxt/src/components", "components"],
     ["nuxt/src/composables", "composables"],
   ],
@@ -41,14 +42,19 @@ const UI_ALIASES = { mui: "react", vuetify: "nuxt", vue: "nuxt" }
 /** デモにしか使っていない依存 (取り込み先には要らない)。 */
 const DEMO_ONLY = new Set(["react-router", "nuxt", "vue-router"])
 const SKIP = (rel) => /\.test\.[tj]sx?$/.test(rel)
+/** draft/ の下のもの (--draft を付けたときだけ取り込む)。 */
+const isDraft = (rel) => rel.split("/").includes("draft")
+/** draft だけが使う依存。 */
+const DRAFT_ONLY = new Set(["@tanstack/query-core"])
 
 function parseArgs(argv) {
-  const opts = { ui: null, check: false, dryRun: false, app: null }
+  const opts = { ui: null, check: false, dryRun: false, draft: false, app: null }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     if (a === "--ui") opts.ui = argv[++i]
     else if (a === "--check") opts.check = true
     else if (a === "--dry-run") opts.dryRun = true
+    else if (a === "--draft") opts.draft = true
     else if (a === "-h" || a === "--help") opts.help = true
     else if (!a.startsWith("-") && !opts.app) opts.app = a
     else throw new Error(`不明な引数: ${a}`)
@@ -79,12 +85,13 @@ function git(args) {
   }
 }
 
-/** 部品と core が使う外部パッケージのうち、アプリに無いもの。 */
-function missingDeps(ui, appDir) {
+/** 部品と utils が使う外部パッケージのうち、アプリに無いもの。 */
+function missingDeps(ui, appDir, draft) {
   const need = new Map()
-  for (const pkgPath of ["core/package.json", `${ui}/package.json`]) {
+  for (const pkgPath of ["utils/package.json", `${ui}/package.json`]) {
     for (const [name, version] of Object.entries(readJson(path.join(ROOT, pkgPath)).dependencies)) {
-      if (!DEMO_ONLY.has(name)) need.set(name, { name, version, dev: false })
+      if (DEMO_ONLY.has(name) || (!draft && DRAFT_ONLY.has(name))) continue
+      need.set(name, { name, version, dev: false })
     }
   }
   // 型定義が別パッケージのもの (バージョンはルートの package.json に合わせる)
@@ -103,8 +110,9 @@ function missingDeps(ui, appDir) {
   return [...need.values()].filter((d) => !(d.name in have))
 }
 
-/** アプリの設定に `@core` の別名があるか (無ければ足し方を表示する)。 */
-function aliasHints(ui, appDir, srcName) {
+/** アプリに `@` → src の別名があるか (無ければ足し方を表示する。Nuxt は最初からある)。 */
+function aliasHints(ui, appDir) {
+  if (ui === "nuxt") return []
   const read = (f) => {
     try {
       return fs.readFileSync(path.join(appDir, f), "utf8")
@@ -113,29 +121,16 @@ function aliasHints(ui, appDir, srcName) {
     }
   }
   const hints = []
-  if (ui === "nuxt") {
-    const conf = read("nuxt.config.ts")
-    if (!conf.includes("@core")) {
-      hints.push(
-        "nuxt.config.ts に別名を足す (tsconfig は Nuxt が作る):",
-        `  alias: { "@core": fileURLToPath(new URL("./${srcName}/core", import.meta.url)) },`,
-      )
-    }
-  } else {
-    const vite = read("vite.config.ts") + read("vite.config.js")
-    const ts = read("tsconfig.app.json") + read("tsconfig.json")
-    if (!vite.includes("@core")) {
-      hints.push(
-        "vite.config.ts に別名を足す:",
-        '  resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)), "@core": fileURLToPath(new URL("./src/core", import.meta.url)) } },',
-      )
-    }
-    if (!ts.includes("@core")) {
-      hints.push(
-        "tsconfig (compilerOptions) に paths を足す:",
-        '  "paths": { "@/*": ["./src/*"], "@core": ["./src/core"], "@core/*": ["./src/core/*"] }',
-      )
-    }
+  const vite = read("vite.config.ts") + read("vite.config.js")
+  const ts = read("tsconfig.app.json") + read("tsconfig.json")
+  if (!/["']@["']\s*:/.test(vite)) {
+    hints.push(
+      "vite.config.ts に別名を足す:",
+      '  resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },',
+    )
+  }
+  if (!ts.includes('"@/*"')) {
+    hints.push("tsconfig (compilerOptions) に paths を足す:", '  "paths": { "@/*": ["./src/*"] }')
   }
   return hints
 }
@@ -175,7 +170,8 @@ function vendor(opts, appDir, src) {
   for (const [from, to] of layout) {
     const dir = path.join(ROOT, from)
     for (const rel of walk(dir)) {
-      if (!SKIP(rel)) files.set(`${to}/${rel}`, fs.readFileSync(path.join(dir, rel)))
+      if (SKIP(rel) || (!opts.draft && isDraft(rel))) continue
+      files.set(`${to}/${rel}`, fs.readFileSync(path.join(dir, rel)))
     }
   }
 
@@ -207,6 +203,7 @@ function vendor(opts, appDir, src) {
     source: { repo: "https://github.com/nak0376179/headless-components", commit, dirty },
     vendoredAt,
     ui: opts.ui,
+    draft: opts.draft,
     files: Object.fromEntries([...files].map(([rel, buf]) => [rel, sha(buf)])),
   }
   const hooksDir = opts.ui === "nuxt" ? "composables" : "hooks"
@@ -221,31 +218,31 @@ function vendor(opts, appDir, src) {
           'import { useCsvJson } from "@/hooks/useCsvJson"   // 見た目を自作するとき',
         ]
   const readme = [
-    "# core (headless-components から取り込んだもの)",
+    "# utils (headless-components から取り込んだもの)",
     "",
-    `[headless-components](${manifest.source.repo}) の core と部品を取り込んだもの (commit \`${commit}\`${dirty ? "・未コミットの変更あり" : ""}、${vendoredAt.slice(0, 10)})。`,
-    `取り込んだのは src/core/ と、src/components/・src/${hooksDir}/ のうち \`.vendored.json\` に載っているファイル。`,
+    `[headless-components](${manifest.source.repo}) の utils と部品を取り込んだもの (commit \`${commit}\`${dirty ? "・未コミットの変更あり" : ""}、${vendoredAt.slice(0, 10)})。`,
+    `取り込んだのは src/utils/・src/components/・src/${hooksDir}/ のうち \`.vendored.json\` に載っているファイル${opts.draft ? " (draft を含む)" : " (main だけ。draft は --draft)"}。`,
     "",
     "**取り込んだファイルは編集しない。** 直したいときはライブラリ本体を直して取り込み直す:",
     "",
     "```bash",
-    `cd <headless-components> && pnpm vendor <このアプリ> --ui ${opts.ui}`,
+    `cd <headless-components> && pnpm vendor <このアプリ> --ui ${opts.ui}${opts.draft ? " --draft" : ""}`,
     "pnpm vendor <このアプリ> --check   # 手で書き換えていないかの確認",
     "```",
     "",
     "アプリ固有の見た目や既定値は、別のファイルで包み直す。",
     "",
     "```ts",
-    'import { email, type ColumnSpec } from "@core"',
+    'import { email, fetchAllPages, type ColumnSpec } from "@/utils"',
     ...example,
     "```",
     "",
   ].join("\n")
 
-  const missing = missingDeps(opts.ui, appDir)
-  const hints = aliasHints(opts.ui, appDir, path.basename(src))
+  const missing = missingDeps(opts.ui, appDir, opts.draft)
+  const hints = aliasHints(opts.ui, appDir)
   console.log(
-    `取り込み先: ${src}  (--ui ${opts.ui}, ${files.size} ファイル, commit ${commit}${dirty ? " +未コミット" : ""})`,
+    `取り込み先: ${src}  (--ui ${opts.ui}${opts.draft ? " + draft" : ""}, ${files.size} ファイル, commit ${commit}${dirty ? " +未コミット" : ""})`,
   )
   if (opts.dryRun) {
     for (const rel of files.keys()) console.log(`  ${path.basename(src)}/${rel}`)
@@ -283,7 +280,7 @@ function main() {
       fs
         .readFileSync(fileURLToPath(import.meta.url), "utf8")
         .split("\n")
-        .slice(1, 18)
+        .slice(1, 19)
         .join("\n"),
     )
     return opts.help ? 0 : 1

@@ -29,9 +29,33 @@ export default tseslint.config(
     // コンポーネント名は MUI 版とそろえる (Pixelate のように 1 語のものがある)。Nuxt のページ名も 1 語。
     rules: { "vue/multi-word-component-names": "off" },
   },
-  // core はフレームワーク非依存を保つ。
+  // utils はフレームワーク非依存を保つ。main (draft/ の外) は draft を参照しない。
   {
-    files: ["core/**/*.ts"],
+    files: ["utils/**/*.ts"],
+    ignores: ["utils/src/draft/**", "**/*.test.*"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            "react",
+            "react-*",
+            "vue",
+            "vuetify",
+            "@mui/*",
+            "nuxt",
+            "#*",
+            "@/*",
+            "./draft",
+            "./draft/*",
+            "../draft/*",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["utils/src/draft/**/*.ts"],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -52,6 +76,35 @@ export default tseslint.config(
       "no-restricted-imports": [
         "error",
         { patterns: ["@demo-data", "@/demo/*", "@/pages/*", "@/layouts/*", "#imports", "#app"] },
+      ],
+    },
+  },
+  // main は draft に頼らない (pnpm vendor の既定では draft を取り込まないので、取り込み先で import が切れる)。
+  {
+    files: [
+      "react/src/components/**/*.{ts,tsx}",
+      "react/src/hooks/**/*.ts",
+      "nuxt/src/components/**/*.{ts,vue}",
+      "nuxt/src/composables/**/*.ts",
+    ],
+    ignores: ["**/draft/**", "**/*.test.*"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            "@/utils/draft",
+            "@/utils/draft/*",
+            "@/components/draft/*",
+            "@/hooks/draft/*",
+            "@/composables/draft/*",
+            "./draft/*",
+            "../draft/*",
+            "@demo-data",
+            "@/demo/*",
+            "@/pages/*",
+          ],
+        },
       ],
     },
   },

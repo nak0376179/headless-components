@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "react"
-import { createDataTable, type DataTableOptions } from "@core"
+import { createDataTable, type DataTableOptions } from "@/utils"
 import { useController, useStore } from "@/hooks/useStore"
 
 /**

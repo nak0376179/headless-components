@@ -9,8 +9,8 @@ import {
   Stack,
   Switch,
 } from "@mui/material"
-import { countBetween, toggleInList } from "@core"
-import { useForm } from "@/hooks/useForm"
+import { countBetween, toggleInList } from "@/utils/draft"
+import { useForm } from "@/hooks/draft/useForm"
 import { HOBBIES } from "@demo-data"
 import { FormShell, fakeSave } from "@/demo/FormShell"
 

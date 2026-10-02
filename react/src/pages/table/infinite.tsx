@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { Chip, Stack, Typography } from "@mui/material"
-import { InfiniteTable } from "@/components/InfiniteTable"
+import { InfiniteTable } from "@/components/draft/InfiniteTable"
 import { useController } from "@/hooks/useStore"
 import { createLargeEmployeeSource, type Employee } from "@demo-data"
-import type { DataTableColumn } from "@core"
+import type { DataTableColumn } from "@/utils"
 import { employeeColumns } from "@/demo/employeeColumns"
 
 const TOTAL = 10000

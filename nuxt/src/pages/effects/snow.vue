@@ -1,9 +1,10 @@
 <script setup lang="ts">
 // 冬の夜のログイン画面。ダイアログ (data-snow-target) の上に雪が積もり、ログインを押すと揺れて落ちる。
 import { ref } from "vue"
-import Snowfall from "@/components/effects/Snowfall.vue"
-import { useForm } from "@/composables/useForm"
-import { email, required, whenFilled } from "@core"
+import Snowfall from "@/components/draft/effects/Snowfall.vue"
+import { useForm } from "@/composables/draft/useForm"
+import { email } from "@/utils"
+import { required, whenFilled } from "@/utils/draft"
 
 const STARS = Array.from({ length: 60 }, (_, i) => ({
   left: `${(i * 37) % 100}%`,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import { countBetween, filterOptions, required } from "@core"
-import { useForm } from "@/composables/useForm"
+import { countBetween, filterOptions, required } from "@/utils/draft"
+import { useForm } from "@/composables/draft/useForm"
 import { PREFECTURES, prefectureSearchText, type Prefecture } from "@demo-data"
 import FormShell from "@/demo/FormShell.vue"
 import { fakeSave } from "@/demo/fakeSave"

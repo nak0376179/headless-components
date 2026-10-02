@@ -1,7 +1,7 @@
 import { useRef, type ReactNode } from "react"
 import { Button } from "@mui/material"
-import type { SnowfallController } from "@core"
-import { Snowfall } from "@/components/effects/Snowfall"
+import type { SnowfallController } from "@/utils/draft"
+import { Snowfall } from "@/components/draft/effects/Snowfall"
 
 // ページを包むと雪が降る。data-snow-target を付けた要素の上の縁と、包んだ範囲の底に積もる。
 export function WinterLogin({ children }: { children: ReactNode }) {

@@ -1,5 +1,5 @@
 import { Stack, Typography } from "@mui/material"
-import { CursorTable } from "@/components/CursorTable"
+import { CursorTable } from "@/components/draft/CursorTable"
 import { useController } from "@/hooks/useStore"
 import { createEmployeeSource } from "@demo-data"
 import { employeeColumns } from "@/demo/employeeColumns"

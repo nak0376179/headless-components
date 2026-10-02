@@ -1,5 +1,5 @@
 import { toValue, watch, type MaybeRefOrGetter } from "vue"
-import { createCsvJson, type ColumnSpec, type CsvJsonOptions } from "@core"
+import { createCsvJson, type ColumnSpec, type CsvJsonOptions } from "@/utils"
 import { useStore } from "@/composables/useStore"
 
 export interface UseCsvJsonOptions extends Omit<CsvJsonOptions, "columns"> {

@@ -1,7 +1,11 @@
 import type { ReactNode } from "react"
 import {
+  Alert,
   Box,
+  Button,
+  CircularProgress,
   InputAdornment,
+  LinearProgress,
   Paper,
   Table,
   TableBody,
@@ -20,7 +24,7 @@ import {
   resolveTemplate,
   type DataTableColumn,
   type Table as HeadlessTable,
-} from "@core"
+} from "@/utils"
 import { useDataTable } from "@/hooks/useDataTable"
 
 export type DataTableProps<T> = {
@@ -29,21 +33,48 @@ export type DataTableProps<T> = {
   initialPageSize?: number
   searchPlaceholder?: string
   getRowId?: (row: T, index: number) => string
+  /** 取得中 (TanStack Query の isFetching など)。データがまだ無ければ表の中に、あれば上端に出す。 */
+  loading?: boolean
+  /** 取得の失敗 (表の上に出す)。 */
+  error?: string | null
+  /** 「再試行」を押したとき (refetch など)。渡さなければボタンを出さない。 */
+  onRetry?: () => void
 }
 
-/** @core の createDataTable (TanStack Table) を MUI で描く汎用データテーブル。 */
+/** @/utils の createDataTable (TanStack Table) を MUI で描く汎用データテーブル。 */
 export function DataTable<T>({
   data,
   columns,
   initialPageSize = 10,
   searchPlaceholder = "検索…",
   getRowId,
+  loading = false,
+  error = null,
+  onRetry,
 }: DataTableProps<T>) {
   const { table, state } = useDataTable({ data, columns, initialPageSize, getRowId })
   const summary = paginationSummary(table)
 
   return (
-    <Paper variant="outlined">
+    <Paper variant="outlined" sx={{ position: "relative", overflow: "hidden" }}>
+      {loading && data.length > 0 && (
+        <LinearProgress sx={{ position: "absolute", top: 0, left: 0, right: 0 }} />
+      )}
+      {error && (
+        <Alert
+          severity="error"
+          sx={{ m: 2, mb: 0 }}
+          action={
+            onRetry && (
+              <Button color="inherit" size="small" onClick={onRetry}>
+                再試行
+              </Button>
+            )
+          }
+        >
+          {error}
+        </Alert>
+      )}
       <Box sx={{ p: 2 }}>
         <TextField
           size="small"
@@ -62,7 +93,10 @@ export function DataTable<T>({
           }}
         />
       </Box>
-      <TableView table={table} />
+      <TableView
+        table={table}
+        loading={loading && data.length === 0 ? <CircularProgress size={28} /> : undefined}
+      />
       <TablePagination
         component="div"
         count={summary.total}

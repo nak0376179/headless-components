@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
-import { createMemorySource, virtualWindow } from "@core"
-import { useInfiniteList } from "@/hooks/useInfiniteList"
+import { createMemorySource } from "@/utils"
+import { virtualWindow } from "@/utils/draft"
+import { useInfiniteList } from "@/hooks/draft/useInfiniteList"
 
 type Message = { id: string; text: string }
 const source = createMemorySource<Message>({

@@ -18,7 +18,7 @@ import {
   type ColumnSpec,
   type ConvertResult,
   type OutputFormat,
-} from "@core"
+} from "@/utils"
 import { useCsvJson } from "@/hooks/useCsvJson"
 
 export interface CsvJsonTextAreaProps {
@@ -40,7 +40,7 @@ export interface CsvJsonTextAreaHandle {
 
 /**
  * CSV/TSV を貼り付けて JSON / CSV / TSV に変換するテキストエリア (MUI)。
- * 状態と変換は @core の createCsvJson が持ち、ここは描くだけ。
+ * 状態と変換は @/utils の createCsvJson が持ち、ここは描くだけ。
  */
 export const CsvJsonTextArea = forwardRef<CsvJsonTextAreaHandle, CsvJsonTextAreaProps>(
   function CsvJsonTextArea({ columns, onConvert, rows = 8, defaultFormat }, ref) {

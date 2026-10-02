@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import Snowfall from "@/components/effects/Snowfall.vue"
+import Snowfall from "@/components/draft/effects/Snowfall.vue"
 
 // ページを包むと雪が降る。data-snow-target を付けた要素の上の縁と、包んだ範囲の底に積もる。
 // intensity: 1 秒・幅 1000px あたりの粒の数 / wind: 正で右へ / max-depth: 積もる深さの上限 (px)

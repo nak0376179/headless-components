@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { JigsawPuzzle } from "@/components/effects/JigsawPuzzle"
+import { JigsawPuzzle } from "@/components/draft/effects/JigsawPuzzle"
 
 // 包んだページをジグソーパズルのピースに切り分けて散らす。元の位置に戻すとはまる。
 export function April1st({ children }: { children: ReactNode }) {

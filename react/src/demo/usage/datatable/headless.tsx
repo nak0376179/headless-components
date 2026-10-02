@@ -1,4 +1,4 @@
-import { paginationSummary } from "@core"
+import { paginationSummary } from "@/utils"
 import { useDataTable } from "@/hooks/useDataTable"
 import { columns, type Employee } from "./columns"
 

@@ -9,9 +9,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
-import { Snowfall } from "@/components/effects/Snowfall"
-import { useForm } from "@/hooks/useForm"
-import { email, required, whenFilled, type SnowfallController } from "@core"
+import { Snowfall } from "@/components/draft/effects/Snowfall"
+import { useForm } from "@/hooks/draft/useForm"
+import { email } from "@/utils"
+import { required, whenFilled, type SnowfallController } from "@/utils/draft"
 
 const STARS = Array.from({ length: 60 }, (_, i) => ({
   left: `${(i * 37) % 100}%`,

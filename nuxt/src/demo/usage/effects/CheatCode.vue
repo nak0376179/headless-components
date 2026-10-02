@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CheatCode from "@/components/effects/CheatCode.vue"
+import CheatCode from "@/components/draft/effects/CheatCode.vue"
 // ↑↑↓↓←→←→BA (コナミコマンド) を入力すると紙吹雪と秘密のバナーを出す。code を省略するとコナミコマンド。
 const code = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "b", "a"]
 </script>

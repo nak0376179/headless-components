@@ -2,7 +2,7 @@
 // ヘッダ (並べ替えつき) と行を描く。DataTable と CursorTable で共用。
 // 列定義の header / cell は文字列か「VNode・文字列を返す関数」(h() で書く)。
 import { computed } from "vue"
-import { resolveTemplate, type Table } from "@core"
+import { resolveTemplate, type Table } from "@/utils"
 import RenderValue from "./RenderValue"
 
 const props = withDefaults(

@@ -1,4 +1,4 @@
-import { createMemorySource } from "@core"
+import { createMemorySource } from "@/utils"
 import type { Employee } from "../datatable/columns"
 
 // API がまだ無いうちは、メモリ上の模擬 API で同じ形の fetchPage を作れる (このデモもこれ)。

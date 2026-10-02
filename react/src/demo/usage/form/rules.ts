@@ -1,4 +1,4 @@
-import { countBetween, createForm, required, toggleInList, type FieldRule } from "@core"
+import { countBetween, createForm, required, toggleInList, type FieldRule } from "@/utils/draft"
 
 type Values = { plan: string; seats: string; hobbies: string[]; agree: boolean }
 

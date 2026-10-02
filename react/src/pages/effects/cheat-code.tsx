@@ -1,4 +1,4 @@
-import { CheatCode } from "@/components/effects/CheatCode"
+import { CheatCode } from "@/components/draft/effects/CheatCode"
 import { DemoPage } from "@/demo/DemoPage"
 
 export default function CheatCodePage() {

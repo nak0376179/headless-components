@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends object">
 // フォームのデモの共通枠: 見出し・本体・送信ボタン・いまの値 (JSON)・送信結果 (React 版の FormShell と同じ)。
-import type { FormController, FormState } from "@core"
+import type { FormController, FormState } from "@/utils/draft"
 
 defineProps<{
   title: string

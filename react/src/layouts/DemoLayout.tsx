@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react"
 import { Outlet, useLocation, useNavigate } from "react-router"
 import {
+  Alert,
   AppBar,
   Box,
   Button,
@@ -60,9 +61,18 @@ export function DemoLayout() {
           scrollButtons="auto"
           sx={{ px: 2 }}
         >
-          {NAV.map((t) => (
-            <Tab key={t.slug} value={t.slug} label={t.label} />
-          ))}
+          {NAV.flatMap((t, i) => [
+            // main と draft の境目に見出しを置く (押せない)
+            ...(t.draft && !NAV[i - 1]?.draft
+              ? [<Tab key="draft-label" disabled label="🧪 Draft" sx={{ minWidth: 0, px: 1 }} />]
+              : []),
+            <Tab
+              key={t.slug}
+              value={t.slug}
+              label={t.label}
+              sx={t.draft ? { opacity: 0.75, fontWeight: 400 } : { fontWeight: 600 }}
+            />,
+          ])}
         </Tabs>
         {tab.pages.length > 1 && (
           <Tabs
@@ -80,6 +90,12 @@ export function DemoLayout() {
       </AppBar>
 
       <Container maxWidth="lg" sx={{ my: 4 }}>
+        {tab.draft && (
+          <Alert severity="info" variant="outlined" sx={{ mb: 3 }}>
+            🧪 Draft — main (CSV/TSV → JSON・データテーブル) 以外の試作。仕様は変わりうるし、pnpm
+            vendor の既定では取り込まない (--draft で取り込む)。
+          </Alert>
+        )}
         <Box key={pathname}>
           <Outlet />
         </Box>

@@ -1,4 +1,4 @@
-import { combine, email, numeric, oneOf, pattern, zenkakuKatakana, type ColumnSpec } from "@core"
+import { combine, email, numeric, oneOf, pattern, zenkakuKatakana, type ColumnSpec } from "@/utils"
 
 // 列定義は UI に依らない (React でも Vue でも同じ物を渡す)。
 // label = 貼り付けるデータのヘッダ (日本語の項目名) / key = 変換後の JSON のキー。

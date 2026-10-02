@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 1 ページずつ API に取りに行く (カーソル方式)。検索もサーバー側で行う。
-import CursorTable from "@/components/CursorTable.vue"
+import CursorTable from "@/components/draft/CursorTable.vue"
 import { createEmployeeSource, type Employee } from "@demo-data"
 import { employeeColumns } from "@/demo/employeeColumns"
 

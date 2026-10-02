@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { createCsvJson, type CsvJsonOptions } from "@core"
+import { createCsvJson, type CsvJsonOptions } from "@/utils"
 import { useController, useLatest, useStore } from "@/hooks/useStore"
 
 /** CSV/TSV の入力と変換。onConvert は最新の関数を呼ぶ。 */

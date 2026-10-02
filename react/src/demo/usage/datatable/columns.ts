@@ -1,4 +1,4 @@
-import { createColumnHelper } from "@core"
+import { createColumnHelper } from "@/utils"
 
 export type Employee = {
   email: string

@@ -1,5 +1,5 @@
-import type { ColumnSpec, ColumnUsage } from "@core"
-import { email, numeric } from "@core"
+import type { ColumnSpec, ColumnUsage } from "@/utils"
+import { email, numeric } from "@/utils"
 
 /** デモ用の列定義。よく使うバリデータのビルダー（email / numeric）で組み立てている。 */
 export const demoColumns: ColumnSpec[] = [

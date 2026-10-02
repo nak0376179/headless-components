@@ -33,7 +33,7 @@ import fxPixelate from "./effects/Pixelate.vue?raw"
 /** アプリへの取り込み (どのページにも出す)。 */
 export const VENDOR_BLOCK: UsageBlock = {
   title: "アプリへ取り込む",
-  note: "npm には出していないので、使うアプリへソースごとコピーする。このリポジトリと同じ場所 (src/core・src/components・src/composables) に入るので、上のコード例の import はそのまま使える。アプリには別名 `@core` → src/core を張る (足りない設定は表示される)。",
+  note: "npm には出していないので、使うアプリへソースごとコピーする。このリポジトリと同じ場所 (src/core・src/components・src/composables) に入るので、上のコード例の import はそのまま使える。アプリには別名 `@/utils` → src/core を張る (足りない設定は表示される)。",
   lang: "sh",
   code: [
     "# このリポジトリで実行する",
@@ -134,7 +134,7 @@ export const usageBySlug: Record<string, UsageBlock[]> = {
     pageSource("読みでも探せる AutoComplete", "AutocompleteDemo.vue", autocompleteDemo),
     FORM_SHELL,
   ],
-  "csv-json": [
+  convert: [
     {
       title: "1. 列を定義する",
       note: "ヘッダの日本語名 (label) と JSON のキー (key)、必須 / 省略可 / 不要、文字数、検査を並べる。検査は組み合わせられる (combine)。UI に依らないので React / Vue で同じ物を使う。",
@@ -171,7 +171,7 @@ export const usageBySlug: Record<string, UsageBlock[]> = {
       code: csvCoreOnly,
     },
   ],
-  datatable: [
+  client: [
     {
       title: "1. 列を定義する",
       note: "TanStack Table の列定義そのもの。meta.searchText を書くと、フリーワード検索が画面の文字 (「在籍」「¥5,200,000」) でも当たる。",
@@ -181,7 +181,7 @@ export const usageBySlug: Record<string, UsageBlock[]> = {
     },
     {
       title: "2. 完成品のコンポーネントで使う",
-      note: "並べ替え・フリーワード検索・ページングは手元で行う。",
+      note: "全件を TanStack Query (useQuery) で取ってキャッシュし、並べ替え・フリーワード検索・ページングは手元 (TanStack Table) で行う。DataTable に isFetching・error・refetch を渡すと、読み込み中・エラー・再試行が出る。",
       lang: "vue",
       file: "Employees.vue",
       code: dtComponent,

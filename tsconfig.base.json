@@ -17,8 +17,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@core": ["./core/src"],
-      "@core/*": ["./core/src/*"],
+      "@/utils": ["./utils/src"],
+      "@/utils/*": ["./utils/src/*"],
       "@demo-data": ["./demo-data/src"]
     }
   }

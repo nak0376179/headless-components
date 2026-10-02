@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ShatterGlass from "@/components/effects/ShatterGlass.vue"
+import ShatterGlass from "@/components/draft/effects/ShatterGlass.vue"
 import DemoPage from "@/demo/DemoPage.vue"
 
 const on = () => console.log("smash! 💥")

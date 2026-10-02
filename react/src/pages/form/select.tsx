@@ -10,8 +10,8 @@ import {
   Select,
   Stack,
 } from "@mui/material"
-import { countBetween, required } from "@core"
-import { useForm } from "@/hooks/useForm"
+import { countBetween, required } from "@/utils/draft"
+import { useForm } from "@/hooks/draft/useForm"
 import { PREFECTURES, REGIONS } from "@demo-data"
 import { FormShell, fakeSave } from "@/demo/FormShell"
 

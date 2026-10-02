@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import JigsawPuzzle from "@/components/effects/JigsawPuzzle.vue"
+import JigsawPuzzle from "@/components/draft/effects/JigsawPuzzle.vue"
 import DemoPage from "@/demo/DemoPage.vue"
 
 const on = () => console.log("solved! 🎉")

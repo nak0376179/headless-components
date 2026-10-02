@@ -1,11 +1,11 @@
 <script lang="ts">
 // 1. アプリで 1 つ作る (dialogs.ts などに置き、どこからでも import して使う)
-import { createDialogs } from "@core"
+import { createDialogs } from "@/utils/draft"
 export const dialogs = createDialogs()
 </script>
 
 <script setup lang="ts">
-import DialogHost from "@/components/DialogHost.vue"
+import DialogHost from "@/components/draft/DialogHost.vue"
 
 const props = defineProps<{ name: string; onDelete: () => Promise<void> }>()
 

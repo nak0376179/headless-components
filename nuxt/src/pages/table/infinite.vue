@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // 1 万件を 100 件ずつ読み込みながらスクロールする。描くのは見えている行だけ。
 import { onBeforeUnmount, onMounted, ref } from "vue"
-import type { DataTableColumn } from "@core"
-import InfiniteTable from "@/components/InfiniteTable.vue"
+import type { DataTableColumn } from "@/utils"
+import InfiniteTable from "@/components/draft/InfiniteTable.vue"
 import { createLargeEmployeeSource, type Employee } from "@demo-data"
 import { employeeColumns } from "@/demo/employeeColumns"
 

@@ -12,30 +12,50 @@ export interface NavTab {
   label: string
   /** 2 つ以上あるときだけ小タブを出す。先頭がそのタブの既定。 */
   pages: NavPage[]
+  /** draft (main 以外。仕様は変わりうる・pnpm vendor の既定では取り込まない)。タブを控えめに出し、ページに注記する。 */
+  draft?: boolean
 }
 
-/** 上位タブの一覧。先頭のタブの先頭が既定のページ。 */
+/** 上位タブの一覧。先頭のタブの先頭が既定のページ。main を先に、draft を後に並べる。 */
 export const NAV: NavTab[] = [
+  // ---- main
+  {
+    slug: "csv-json",
+    label: "📋 CSV/TSV → JSON",
+    pages: [{ slug: "convert", label: "📋 CSV/TSV → JSON" }],
+  },
+  {
+    slug: "datatable",
+    label: "📊 データテーブル",
+    pages: [{ slug: "client", label: "📊 データテーブル" }],
+  },
+  // ---- draft
   {
     slug: "form",
     label: "📝 フォーム",
+    draft: true,
     pages: [
       { slug: "textbox", label: "📝 テキストボックス" },
-      { slug: "csv-json", label: "📋 CSV/TSV 一括入力" },
       { slug: "select", label: "🔽 セレクト" },
       { slug: "checkbox", label: "☑️ チェックボックス" },
       { slug: "radio", label: "🔘 ラジオボタン" },
       { slug: "autocomplete", label: "🔎 AutoComplete" },
     ],
   },
-  { slug: "cards", label: "🃏 カード", pages: [{ slug: "card", label: "🃏 カード" }] },
-  { slug: "dialogs", label: "💬 ダイアログ", pages: [{ slug: "dialog", label: "💬 ダイアログ" }] },
+  { slug: "cards", label: "🃏 カード", draft: true, pages: [{ slug: "card", label: "🃏 カード" }] },
+  {
+    slug: "dialogs",
+    label: "💬 ダイアログ",
+    draft: true,
+    pages: [{ slug: "dialog", label: "💬 ダイアログ" }],
+  },
   {
     slug: "table",
-    label: "📊 テーブル",
+    label: "🧮 テーブル (その他)",
+    draft: true,
     pages: [
       { slug: "table-basics", label: "🧮 テーブルの基本" },
-      { slug: "datatable", label: "📊 データテーブル" },
+      { slug: "datatable", label: "✏️ 追加・編集・削除" },
       { slug: "server-pagination", label: "🗄️ サーバページネーション" },
       { slug: "infinite", label: "♾️ 無限スクロール" },
     ],
@@ -43,6 +63,7 @@ export const NAV: NavTab[] = [
   {
     slug: "effects",
     label: "✨ 演出",
+    draft: true,
     pages: [
       { slug: "jigsaw", label: "🧩 ジグソー" },
       { slug: "shatter", label: "💥 ガラス割れ" },

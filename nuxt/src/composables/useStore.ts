@@ -9,7 +9,7 @@ import {
   type Ref,
   type ShallowRef,
 } from "vue"
-import type { ReadableStore } from "@core"
+import type { ReadableStore } from "@/utils"
 
 /**
  * ストアを購読して shallowRef で返す。ref を渡せば差し替えにも追従する (null の間は undefined)。

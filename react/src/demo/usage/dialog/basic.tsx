@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import { Button } from "@mui/material"
-import { createDialogs } from "@core"
-import { DialogHost } from "@/components/DialogHost"
+import { createDialogs } from "@/utils/draft"
+import { DialogHost } from "@/components/draft/DialogHost"
 
 // 1. アプリで 1 つ作る (どこからでも import して使う)
 export const dialogs = createDialogs()

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { email, maxChars, required, whenFilled } from "@core"
-import { useForm } from "@/composables/useForm"
+import { email } from "@/utils"
+import { maxChars, required, whenFilled } from "@/utils/draft"
+import { useForm } from "@/composables/draft/useForm"
 
 type Values = { name: string; email: string }
 

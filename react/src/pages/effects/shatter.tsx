@@ -1,4 +1,4 @@
-import { ShatterGlass } from "@/components/effects/ShatterGlass"
+import { ShatterGlass } from "@/components/draft/effects/ShatterGlass"
 import { DemoPage } from "@/demo/DemoPage"
 
 export default function ShatterPage() {

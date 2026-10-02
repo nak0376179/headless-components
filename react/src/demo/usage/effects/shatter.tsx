@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { ShatterGlass } from "@/components/effects/ShatterGlass"
+import { ShatterGlass } from "@/components/draft/effects/ShatterGlass"
 
 // クリックした所からガラスのように割る。破片はドラッグでき、「元に戻す」で直る。
 export function Fragile({ children }: { children: ReactNode }) {

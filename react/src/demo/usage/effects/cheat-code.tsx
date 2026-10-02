@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { CheatCode } from "@/components/effects/CheatCode"
+import { CheatCode } from "@/components/draft/effects/CheatCode"
 
 // ↑↑↓↓←→←→BA (コナミコマンド) を入力すると紙吹雪と秘密のバナーを出す。
 export function EasterEgg({ children }: { children: ReactNode }) {

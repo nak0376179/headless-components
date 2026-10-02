@@ -6,7 +6,7 @@ import {
   fetchAllPages,
   type MemorySource,
   type ReadableStore,
-} from "@core"
+} from "@/utils"
 import seed from "./employees.json"
 
 export type Status = "active" | "onLeave" | "retired"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ConvertResult } from "@core"
+import type { ConvertResult } from "@/utils"
 import CsvJsonTextArea from "@/components/CsvJsonTextArea.vue"
 import { columns } from "./columns"
 

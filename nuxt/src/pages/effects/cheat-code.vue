@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CheatCode from "@/components/effects/CheatCode.vue"
+import CheatCode from "@/components/draft/effects/CheatCode.vue"
 import DemoPage from "@/demo/DemoPage.vue"
 
 const on = () => console.log("unlocked! 🎮")
