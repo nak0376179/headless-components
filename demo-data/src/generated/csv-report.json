@@ -1,24 +1,24 @@
 {
-  "generatedAt": "2026-10-02T01:33:02.174Z",
-  "commit": "0e60013",
+  "generatedAt": "2026-10-02T01:58:58.939Z",
+  "commit": "2a4e964",
   "dirty": false,
   "totals": {
     "files": 6,
-    "tests": 100,
-    "passed": 100,
+    "tests": 104,
+    "passed": 104,
     "failed": 0,
-    "durationMs": 58
+    "durationMs": 55
   },
   "coverage": {
     "total": {
       "statements": {
-        "covered": 171,
-        "total": 171,
+        "covered": 174,
+        "total": 174,
         "pct": 100
       },
       "branches": {
-        "covered": 101,
-        "total": 101,
+        "covered": 105,
+        "total": 105,
         "pct": 100
       },
       "functions": {
@@ -27,8 +27,8 @@
         "pct": 100
       },
       "lines": {
-        "covered": 144,
-        "total": 144,
+        "covered": 147,
+        "total": 147,
         "pct": 100
       }
     },
@@ -59,13 +59,13 @@
       {
         "file": "csv-json/convert.ts",
         "statements": {
-          "covered": 92,
-          "total": 92,
+          "covered": 95,
+          "total": 95,
           "pct": 100
         },
         "branches": {
-          "covered": 65,
-          "total": 65,
+          "covered": 69,
+          "total": 69,
           "pct": 100
         },
         "functions": {
@@ -74,8 +74,8 @@
           "pct": 100
         },
         "lines": {
-          "covered": 74,
-          "total": 74,
+          "covered": 77,
+          "total": 77,
           "pct": 100
         }
       },
@@ -135,7 +135,7 @@
           "group": "入力画面の状態 (createCsvJson)",
           "title": "はじめは空の入力・JSON・未変換",
           "status": "passed",
-          "durationMs": 3,
+          "durationMs": 2,
           "failure": null
         },
         {
@@ -149,7 +149,7 @@
           "group": "入力画面の状態 (createCsvJson)",
           "title": "変換結果をストアに載せて購読者に通知する",
           "status": "passed",
-          "durationMs": 3,
+          "durationMs": 2,
           "failure": null
         },
         {
@@ -238,7 +238,7 @@
           "group": "変換の基本挙動",
           "title": "CSV を JSON に変換できる（不要な列は削られる）",
           "status": "passed",
-          "durationMs": 6,
+          "durationMs": 5,
           "failure": null
         },
         {
@@ -432,7 +432,21 @@
         },
         {
           "group": "入力パースとトリム",
-          "title": "引用符で囲めば値の中のカンマは区切りにならない",
+          "title": "引用符で囲んでも、値にカンマがあればエラーになる (列はずれない)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "カンマのエラーは文字数・validate より先に判定する (1 セル 1 件)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "入力パースとトリム",
+          "title": "不要 (unused) の列はカンマがあっても検査しない",
           "status": "passed",
           "durationMs": 0,
           "failure": null
@@ -446,7 +460,7 @@
         },
         {
           "group": "入力パースとトリム",
-          "title": "CSV 出力ではカンマを含む値が引用される",
+          "title": "CSV 出力では改行・引用符を含む値が引用される",
           "status": "passed",
           "durationMs": 0,
           "failure": null
@@ -499,6 +513,13 @@
           "status": "passed",
           "durationMs": 0,
           "failure": null
+        },
+        {
+          "group": "カンマのエラーの上限",
+          "title": "値のカンマのエラーが続いても 10 件で止まる",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
         }
       ]
     },
@@ -535,7 +556,7 @@
         },
         {
           "group": "Excel からのコピー",
-          "title": "タブ区切りなら、値の中のカンマは区切りにならない",
+          "title": "タブ区切りでも、値に半角カンマがあればエラーにする",
           "status": "passed",
           "durationMs": 0,
           "failure": null
@@ -722,6 +743,13 @@
         },
         {
           "group": "README の「できること」",
+          "title": "4. 値に半角カンマは入れられない (TSV でも)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "README の「できること」",
           "title": "5. 1 行の中の複数列のエラーを列ごとに返す (1 セルにつき 1 件)",
           "status": "passed",
           "durationMs": 0,
@@ -750,7 +778,7 @@
           "group": "バリデータ・ビルダー",
           "title": "全角チェックは全角を含めば通し、半角の混在も許可する",
           "status": "passed",
-          "durationMs": 3,
+          "durationMs": 2,
           "failure": null
         },
         {
