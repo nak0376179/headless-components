@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-10-02T01:58:58.939Z",
-  "commit": "2a4e964",
+  "generatedAt": "2026-10-02T02:56:55.534Z",
+  "commit": "f9613b8",
   "dirty": false,
   "totals": {
     "files": 6,
-    "tests": 104,
-    "passed": 104,
+    "tests": 109,
+    "passed": 109,
     "failed": 0,
-    "durationMs": 55
+    "durationMs": 59
   },
   "coverage": {
     "total": {
       "statements": {
-        "covered": 174,
-        "total": 174,
+        "covered": 176,
+        "total": 176,
         "pct": 100
       },
       "branches": {
@@ -27,8 +27,8 @@
         "pct": 100
       },
       "lines": {
-        "covered": 147,
-        "total": 147,
+        "covered": 150,
+        "total": 150,
         "pct": 100
       }
     },
@@ -59,8 +59,8 @@
       {
         "file": "csv-json/convert.ts",
         "statements": {
-          "covered": 95,
-          "total": 95,
+          "covered": 97,
+          "total": 97,
           "pct": 100
         },
         "branches": {
@@ -74,8 +74,8 @@
           "pct": 100
         },
         "lines": {
-          "covered": 77,
-          "total": 77,
+          "covered": 80,
+          "total": 80,
           "pct": 100
         }
       },
@@ -135,7 +135,7 @@
           "group": "入力画面の状態 (createCsvJson)",
           "title": "はじめは空の入力・JSON・未変換",
           "status": "passed",
-          "durationMs": 2,
+          "durationMs": 3,
           "failure": null
         },
         {
@@ -238,7 +238,7 @@
           "group": "変換の基本挙動",
           "title": "CSV を JSON に変換できる（不要な列は削られる）",
           "status": "passed",
-          "durationMs": 5,
+          "durationMs": 6,
           "failure": null
         },
         {
@@ -598,7 +598,42 @@
         },
         {
           "group": "全角の記号・空白",
-          "title": "ゼロ幅スペース (Web からのコピーで混じる) は取り除かず、値に残る",
+          "title": "ゼロ幅スペース (Web からのコピーで混じる) は、前後でも途中でも取り除く",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "ワードジョイナー・BOM (ゼロ幅ノーブレークスペース) も途中から取り除く",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "ゼロ幅接合子は前後だけ取り除き、絵文字をつないでいる途中のものは残す",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "ゼロ幅文字だけのセルは空とみなす (必須ならエラー)",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "ゼロ幅文字は文字数に数えない",
+          "status": "passed",
+          "durationMs": 0,
+          "failure": null
+        },
+        {
+          "group": "全角の記号・空白",
+          "title": "項目名に混じったゼロ幅文字も取り除いて突き合わせる",
           "status": "passed",
           "durationMs": 0,
           "failure": null
@@ -710,7 +745,7 @@
           "group": "README の「できること」",
           "title": "1. 列の並びは自由・任意の列は無くてよい・出力のキーは列定義の順",
           "status": "passed",
-          "durationMs": 4,
+          "durationMs": 5,
           "failure": null
         },
         {
@@ -724,7 +759,7 @@
           "group": "README の「できること」",
           "title": "3. 必須の列はヘッダに必要で、値も空にできない",
           "status": "passed",
-          "durationMs": 0,
+          "durationMs": 1,
           "failure": null
         },
         {
@@ -759,7 +794,7 @@
           "group": "README の「できること」",
           "title": "5. エラーは全体で最大 10 件まで (行・列をまたいで数える)",
           "status": "passed",
-          "durationMs": 0,
+          "durationMs": 1,
           "failure": null
         },
         {
@@ -874,7 +909,7 @@
           "group": "小さなストア (createStore)",
           "title": "patch は一部のプロパティだけ差し替え、別のオブジェクトにする",
           "status": "passed",
-          "durationMs": 0,
+          "durationMs": 1,
           "failure": null
         },
         {
