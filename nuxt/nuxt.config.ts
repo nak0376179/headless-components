@@ -30,6 +30,8 @@ export default defineNuxtConfig({
       if (resolve) resolve.alias = { ...aliases, ...resolve.alias }
     },
   },
+  // React 版へのリンク先。NUXT_PUBLIC_REACT_URL で上書きできる (generate のときに埋め込まれる)
+  runtimeConfig: { public: { reactUrl: "http://localhost:5210" } },
   devServer: { port: 5211 },
   devtools: { enabled: false },
   telemetry: false,

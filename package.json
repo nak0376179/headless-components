@@ -15,7 +15,8 @@
     "build": "pnpm -r build",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "vendor": "node scripts/vendor.mjs",
-    "handoff": "node scripts/handoff.mjs"
+    "handoff": "node scripts/handoff.mjs",
+    "deploy:demos": "node scripts/deploy-demos.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
