@@ -49,8 +49,20 @@ export type ConvertResult =
 export const MAX_ERRORS = 10
 
 /** セルの前後の空白（全角スペース含む）を取り除く。 */
-const trimCell = (value: string | undefined): string =>
-  (value ?? "").replace(/^[\s\u3000]+|[\s\u3000]+$/g, "")
+const trimCell = (value: string): string => value.replace(/^[\s\u3000]+|[\s\u3000]+$/g, "")
+
+/**
+ * 区切り文字を決める。最初の空でない行 (ヘッダ) にタブがあれば TSV、なければ CSV。
+ *
+ * papaparse の自動判別 (delimiter: "") は行が少ないと外れる。Excel から 2 列 × 1 行をコピーした
+ * `氏名<TAB>備考<CRLF>山田<TAB>あ<CRLF>` がカンマ区切りと判定され、ヘッダ全体が 1 項目になっていた (2026-10-02)。
+ * Excel のコピペは必ずタブ区切りなので、ヘッダのタブで決めれば確実。
+ */
+function detectDelimiter(input: string): "\t" | "," {
+  // 空白だけの入力は呼び出し側で先に弾いているので、空でない行は必ずある
+  const head = input.split(/\r\n|\n|\r/).find((line) => trimCell(line) !== "") as string
+  return head.includes("\t") ? "\t" : ","
+}
 
 /**
  * CSV/TSV テキストを列定義に従って検証・変換する。
@@ -78,8 +90,7 @@ export function convertDelimitedText(
 
   // 生の input をそのままパースする。input.trim() で前後の空白を削ると、末尾セルが空の
   // TSV 行（例: "…\t営業部\t"）で区切りのタブまで削れて列数がずれてしまうため。
-  // delimiter を指定しなければ papaparse がカンマ / タブなどを自動判別する。
-  const parsed = Papa.parse<string[]>(input, { delimiter: "" })
+  const parsed = Papa.parse<string[]>(input, { delimiter: detectDelimiter(input) })
 
   // 前後の「空行」（全セルが空白のみ）だけを取り除く。行内の区切り文字は保持する。
   const isBlankRow = (cells: string[]): boolean => cells.every((c) => trimCell(c) === "")

@@ -398,3 +398,47 @@ describe("入力パースとトリム", () => {
     expect(result.errors).toEqual([{ row: 2, label: "氏名", message: "2行目: 「氏名」は必須です" }])
   })
 })
+
+describe("エラーの上限での打ち切り", () => {
+  // どの種類のエラーで 10 件目に達しても、そこで検査をやめる
+  const limited = (spec: ColumnSpec, value: string) => {
+    const input = ["項目", ...Array.from({ length: 12 }, () => value)].join("\n")
+    const result = convertDelimitedText(input, [spec])
+    return result.ok ? 0 : result.errors.length
+  }
+
+  it("文字数の上限を超えるエラーが続いても 10 件で止まる", () => {
+    expect(limited({ label: "項目", key: "v", usage: "required", maxLength: 2 }, "あいう")).toBe(
+      MAX_ERRORS,
+    )
+  })
+
+  it("文字数の下限を下回るエラーが続いても 10 件で止まる", () => {
+    expect(limited({ label: "項目", key: "v", usage: "required", minLength: 3 }, "あ")).toBe(
+      MAX_ERRORS,
+    )
+  })
+
+  it("validate のエラーが続いても 10 件で止まる", () => {
+    const spec: ColumnSpec = { label: "項目", key: "v", usage: "required", validate: () => "だめ" }
+    expect(limited(spec, "あ")).toBe(MAX_ERRORS)
+  })
+
+  it("列数の誤りが続いても 10 件で止まる", () => {
+    expect(limited({ label: "項目", key: "v", usage: "required" }, "あ,い")).toBe(MAX_ERRORS)
+  })
+})
+
+describe("ヘッダのエラーの上限", () => {
+  it("定義に無い項目名が 11 個以上あっても、エラーは 10 件まで", () => {
+    const header = Array.from({ length: 12 }, (_, i) => `余計な項目${i + 1}`).join(",")
+    const result = convertDelimitedText(
+      `氏名,メールアドレス,${header}\n山田,a@example.com`,
+      columns,
+    )
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.errors).toHaveLength(MAX_ERRORS)
+    expect(result.errors.at(-1)?.message).toBe("ヘッダ: 「余計な項目10」は定義されていない項目です")
+  })
+})

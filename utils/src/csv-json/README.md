@@ -3,14 +3,129 @@
 Excel などから貼り付けた CSV / TSV を、**列定義に従って検証し、JSON / CSV / TSV に変換する**ロジック。
 画面の部品は含まない (UI ライブラリに依存しない) ので、**React / Next.js / Vue / Nuxt のどれでも同じものを使える**。
 
-- 1 行目をヘッダ (日本語の項目名) として列定義と突き合わせる。列の並び順は自由
-- 必須・文字数・形式 (メール・数値・全角カタカナ…) を検査し、エラーは行番号・項目名つきで最大 10 件まで返す
-- ヘッダ・セルの前後の空白 (全角スペースも) は取り除く。区切り (カンマ / タブ) は自動で判定する
-- エラーが 1 件でもあれば変換結果は返さない
+細かい仕様は [SPEC.md](SPEC.md)。下の「できること」の例は `readme.test.ts` でそのまま確かめている。
 
-挙動の細かい仕様は [SPEC.md](SPEC.md)、それを確かめるテストは `*.test.ts`。
+## できること
 
-## 導入
+例はすべて次の列定義で、`convertDelimitedText(テキスト, columns)` を呼んだ結果。
+
+```ts
+const columns: ColumnSpec[] = [
+  { label: "氏名", key: "name", usage: "required", maxLength: 10 },
+  { label: "メールアドレス", key: "email", usage: "required", validate: email() },
+  { label: "年齢", key: "age", usage: "optional", validate: numeric() },
+  {
+    label: "郵便番号",
+    key: "zip",
+    usage: "optional",
+    validate: combine(hankaku(), pattern(/^\d{3}-\d{4}$/, "123-4567 の形で入力してください")),
+  },
+  { label: "メモ", key: "memo", usage: "unused" },
+]
+```
+
+### 1. 列の並びは自由
+
+1 行目 (ヘッダ) の**項目名で列を突き合わせる**ので、列の順番は問わない。任意の列はヘッダごと無くてもよい
+(出力では `""`)。出力のキーは入力の順ではなく**列定義の順**に並ぶ。
+区切りは、ヘッダにタブがあれば TSV (Excel のコピペ)、なければ CSV (カンマ) とみなす。
+
+```text
+メールアドレス,氏名
+taro@example.com,山田太郎
+→ [{ "name": "山田太郎", "email": "taro@example.com", "age": "", "zip": "" }]
+```
+
+### 2. 前後の空白を取り除く (trim)
+
+ヘッダも各セルも、**前後の空白を取り除いてから**扱う。全角スペース (`U+3000`) も対象。**途中の空白は残す**。
+空白だけのセルは空とみなす (必須ならエラー、任意なら `""`)。
+
+```text
+ 氏名 ,メールアドレス
+　山田 太郎　, taro@example.com
+→ name: "山田 太郎" / email: "taro@example.com"
+```
+
+### 3. 必須・任意・不要の列
+
+| `usage`      | ヘッダ                      | 値         | 出力                 |
+| ------------ | --------------------------- | ---------- | -------------------- |
+| `"required"` | 必要 (無ければヘッダエラー) | 空はエラー | 出す                 |
+| `"optional"` | 無くてよい                  | 空でよい   | 出す (無ければ `""`) |
+| `"unused"`   | あってもよい                | 検査しない | **出さない**         |
+
+```text
+メールアドレス            → ヘッダ: 必須項目「氏名」がありません
+氏名,メールアドレス
+　,taro@example.com      → 2行目: 「氏名」は必須です
+```
+
+ヘッダに**列定義に無い項目名**・**重複した項目名**・**空の項目名**があってもエラーになる。
+
+### 4. 検査を重ねる (複数のバリデーション)
+
+1 つの列に、**必須 → 文字数 (`minLength` / `maxLength`) → `validate`** の順で検査をかけられる。
+`validate` に複数の検査を重ねるときは `combine(検査1, 検査2, …)`。前から順に当て、**最初に引っかかった理由**を返す。
+文字数・`validate` は値が空でないときだけ当てる (任意の列が空なら検査しない)。文字数はコードポイントで数える (絵文字も 1 文字)。
+
+```text
+氏名,メールアドレス,郵便番号
+山田太郎山田太郎山田太郎,taro@example.com,   → 2行目: 「氏名」は10文字以内で入力してください（現在12文字）
+山田太郎,taro@example.com,１２３-４５６７     → 3行目: 「郵便番号」が不正です（半角で入力してください）
+山田太郎,taro@example.com,1234567             → 4行目: 「郵便番号」が不正です（123-4567 の形で入力してください）
+```
+
+用意している検査 (`validators.ts`。どれも引数でエラーの文言を変えられる):
+
+| 検査                        | 内容                        |
+| --------------------------- | --------------------------- |
+| `email()`                   | メールアドレスの形式        |
+| `numeric()`                 | 半角数字だけ                |
+| `zenkaku()`                 | 全角を含む (半角の混在は可) |
+| `hankaku()`                 | 半角だけ                    |
+| `zenkakuKatakana()`         | 全角カタカナ (と長音符)     |
+| `hiragana()`                | ひらがな (と長音符)         |
+| `oneOf(["A", "B"])`         | 候補のどれか                |
+| `pattern(/正規表現/, 文言)` | 正規表現に合う              |
+| `combine(検査…)`            | 複数の検査を順に当てる      |
+
+自前の検査は `(value: string) => string | null` (エラーなら理由、問題なければ `null`) を書いて `validate` に渡す。
+
+### 5. エラーをまとめて返す (上限 10 件)
+
+エラーが 1 件でもあれば変換結果は返さず、**全部の行・列を検査してエラーを集めて返す**。
+**1 セルにつき 1 件**、1 行の中で複数の列が誤っていれば列ごとに返す。全体で **`MAX_ERRORS` (10) 件**に達したら打ち切る。
+各エラーは行番号 (`row`)・項目名 (`label`)・表示用の文 (`message`) を持つ。
+
+```text
+氏名,メールアドレス,年齢
+,taro,三十
+→ 2行目: 「氏名」は必須です
+  2行目: 「メールアドレス」が不正です（メールアドレスの形式ではありません）
+  2行目: 「年齢」が不正です（数値で入力してください）
+```
+
+- ヘッダに誤りがあれば、データ行は検査しない (ヘッダのエラーだけ返す)。
+- 列の数が足りない・多すぎる行もエラー。空行は読み飛ばし、行番号は貼り付けたテキストの行のまま数える。
+
+### 6. 出力の形式
+
+`"json"` (既定。2 スペースの字下げ) / `"csv"` / `"tsv"`。CSV / TSV では、カンマ・引用符・改行を含む値は引用符で囲む。
+結果は文字列 (`output`) と、オブジェクトの配列 (`rows`) の両方で返る。
+
+### 7. 日本語の入力
+
+Excel・Web・メールからのコピーを想定して確かめている (`japanese.test.ts`)。**文字の変換 (全角 → 半角など) はしない**。
+
+- Excel のコピー (タブ区切り・CRLF・セル内の改行)、UTF-8 の BOM 付き、全角スペースの trim はそのまま扱える
+- 全角の読点「、」・カンマ「，」は区切りにならない。「𠮷」のような漢字も 1 文字と数える。機種依存文字 (①・㈱・髙) も通る
+- 全角数字「３０」は `numeric()`、半角カナ「ﾔﾏﾀﾞ」とフリガナの空白「ヤマダ　タロウ」は `zenkakuKatakana()` で弾く
+- 項目名は全角・半角を区別する。ゼロ幅スペースは取り除かない。濁点が分かれた文字 (NFD) は 2 文字と数える
+
+一覧は [SPEC.md の「日本語の入力について」](SPEC.md#日本語の入力について)。
+
+## 組み込み方
 
 1. この `utils` フォルダをアプリの `src/utils/` に置く (Nuxt 4 の既定の構成なら `app/utils/`)。
 2. 依存を 1 つ入れる (CSV の解析に使う):
@@ -29,12 +144,46 @@ import { convertDelimitedText, createCsvJson, email, type ColumnSpec } from "@/u
 
 - TypeScript 5 / `strict` で書いてある。ブラウザでもサーバー (Node・SSR) でも動く
   (`copyOutput()` だけはブラウザのクリップボードを使う)。
+- 中のファイルどうしは相対パスで参照しているので、フォルダの名前や置き場所を変えても動く (そのときは import の書き方を合わせる)。
 - **Nuxt** では `utils/` の中身が自動 import の対象になる (`createCsvJson` などを import なしで書ける)。
   アプリの関数と名前がぶつかるときは import を明示する。
 
-## 1. 列を定義する
+## 呼び出し方
 
-`label` = 貼り付けるデータのヘッダ (項目名)、`key` = 変換後のキー、`usage` = 必須 / 省略可 / 不要。
+### A. 関数 1 つで変換する
+
+画面を持たない処理 (送信前の検査・テスト・サーバー側) なら `convertDelimitedText` だけでよい。
+
+<!-- file: react/src/demo/usage/csv-json/core-only.ts -->
+
+```ts
+import { convertDelimitedText, type ColumnSpec } from "@/utils"
+
+// UI なしで変換だけ (サーバーへ送る前の検査・テストなど)。区切りは CSV / TSV を自動判定する。
+const columns: ColumnSpec[] = [
+  { label: "氏名", key: "name", usage: "required", maxLength: 20 },
+  { label: "メールアドレス", key: "email", usage: "required" },
+]
+
+const tsv = ["氏名\tメールアドレス", "山田 太郎\tyamada@example.com"].join("\n")
+const result = convertDelimitedText(tsv, columns, "json")
+
+if (result.ok) {
+  console.log(result.rows) // [{ name: "山田 太郎", email: "yamada@example.com" }]
+  console.log(result.output) // 整形済みの JSON 文字列 (format に "csv" / "tsv" も指定できる)
+} else {
+  for (const e of result.errors) console.log(e.row, e.label, e.message)
+}
+```
+
+<!-- /file -->
+
+### B. 入力画面を作る
+
+`createCsvJson` が入力テキスト・出力形式・変換結果を持つ (`get()` で今の状態、`subscribe()` で変更の通知)。
+画面はこの状態を描いて、`setText` / `setFormat` / `convert` を呼ぶだけ。
+
+列定義の例 (下の画面の例で使っている):
 
 <!-- file: react/src/demo/usage/csv-json/columns.ts -->
 
@@ -72,44 +221,7 @@ export const columns: ColumnSpec[] = [
 
 <!-- /file -->
 
-よく使う検査 (`validators.ts`): `email()` `numeric()` `zenkaku()` `hankaku()` `zenkakuKatakana()` `hiragana()`
-`pattern(正規表現, 文言)` `oneOf(候補)` `combine(検査…)`。どれも引数でエラーの文言を変えられる。
-自前の検査は `(value: string) => string | null` (エラーなら理由、問題なければ null) を `validate` に渡す。
-
-## 2. 変換だけする (関数 1 つ)
-
-画面を持たない処理 (送信前の検査・テスト・サーバー側) なら `convertDelimitedText` だけでよい。
-
-<!-- file: react/src/demo/usage/csv-json/core-only.ts -->
-
-```ts
-import { convertDelimitedText, type ColumnSpec } from "@/utils"
-
-// UI なしで変換だけ (サーバーへ送る前の検査・テストなど)。区切りは CSV / TSV を自動判定する。
-const columns: ColumnSpec[] = [
-  { label: "氏名", key: "name", usage: "required", maxLength: 20 },
-  { label: "メールアドレス", key: "email", usage: "required" },
-]
-
-const tsv = ["氏名\tメールアドレス", "山田 太郎\tyamada@example.com"].join("\n")
-const result = convertDelimitedText(tsv, columns, "json")
-
-if (result.ok) {
-  console.log(result.rows) // [{ name: "山田 太郎", email: "yamada@example.com" }]
-  console.log(result.output) // 整形済みの JSON 文字列 (format に "csv" / "tsv" も指定できる)
-} else {
-  for (const e of result.errors) console.log(e.row, e.label, e.message)
-}
-```
-
-<!-- /file -->
-
-## 3. 入力画面を作る
-
-`createCsvJson` が入力テキスト・出力形式・変換結果を持つ (`get()` / `subscribe()` で読む)。
-画面はこの状態を描いて、`setText` / `setFormat` / `convert` を呼ぶだけ。
-
-### React / Next.js
+#### React / Next.js
 
 `useSyncExternalStore` で購読する。Next.js の App Router ではファイルの先頭に `"use client"` を書く。
 
@@ -167,7 +279,7 @@ export function CsvImport() {
 
 <!-- /file -->
 
-### Vue / Nuxt
+#### Vue / Nuxt
 
 `shallowRef` に写して描く。購読は `onScopeDispose` で外れる。
 
@@ -218,19 +330,52 @@ onScopeDispose(csv.subscribe(() => (state.value = csv.get())))
 見出しや文言は `csvJsonErrorHeading` (「エラーが 3件 あります」)・`csvJsonResultHeading`
 (「変換結果（2件・JSON）」)・`csvJsonPlaceholder` (入力欄の例) を使うと、どの画面でも同じ言い回しになる。
 
+## 型
+
+```ts
+interface ColumnSpec {
+  label: string // 貼り付けるデータのヘッダに現れる項目名
+  key: string // 変換後のキー
+  usage: "required" | "optional" | "unused"
+  minLength?: number // 空でない値にだけ当てる
+  maxLength?: number // 空でない値にだけ当てる
+  validate?: (value: string) => string | null // 空でない値にだけ当てる。エラーなら理由を返す
+}
+
+type ConvertResult =
+  | { ok: true; rows: Record<string, string>[]; output: string }
+  | { ok: false; errors: ConvertError[] }
+
+interface ConvertError {
+  row: number | null // 貼り付けたテキストの行番号 (ヘッダのエラーは null)
+  label: string | null // 項目名 (列を特定できないときは null)
+  message: string // 表示用の文 (行番号・項目名を含む)
+}
+```
+
 ## API
 
-| 名前                                                     | 内容                                                                                                          |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `convertDelimitedText(text, columns, format)`            | 検証して変換する。`{ ok: true, rows, output }` か `{ ok: false, errors }` を返す                              |
-| `createCsvJson({ columns, text?, format?, onConvert? })` | 入力画面の状態を持つ。`get` / `subscribe` / `setText` / `setFormat` / `setColumns` / `convert` / `copyOutput` |
-| `ColumnSpec`                                             | 列定義 (`label` / `key` / `usage` / `minLength` / `maxLength` / `validate`)                                   |
-| `MAX_ERRORS`                                             | 返すエラーの上限 (10)                                                                                         |
-| `OUTPUT_FORMATS`                                         | 出力形式の選択肢 (`json` / `csv` / `tsv` と表示名)                                                            |
-| `createStore`                                            | `createCsvJson` が使っている小さなストア (`get` / `subscribe` / `set` / `patch`)                              |
+| 名前                                                                  | 内容                                                                                                          |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `convertDelimitedText(text, columns, format = "json")`                | 検証して変換する。`ConvertResult` を返す                                                                      |
+| `createCsvJson({ columns, text?, format?, onConvert? })`              | 入力画面の状態を持つ。`get` / `subscribe` / `setText` / `setFormat` / `setColumns` / `convert` / `copyOutput` |
+| `MAX_ERRORS`                                                          | 返すエラーの上限 (10)                                                                                         |
+| `OUTPUT_FORMATS`                                                      | 出力形式の選択肢 (`json` / `csv` / `tsv` と表示名)                                                            |
+| `csvJsonErrorHeading` / `csvJsonResultHeading` / `csvJsonPlaceholder` | 画面の見出し・入力欄の例の文言                                                                                |
+| 検査 (`email` など)                                                   | 上の「4. 検査を重ねる」の表                                                                                   |
+| `createStore`                                                         | `createCsvJson` が使っている小さなストア (`get` / `subscribe` / `set` / `patch`)                              |
 
 ## テスト
 
 `*.test.ts` は [Vitest](https://vitest.dev/) で書いてある (`npm install -D vitest` → `npx vitest run src/utils`)。
-Jest で流すなら、各ファイル先頭の `from "vitest"` を外し (Jest のグローバルの `describe` / `it` / `expect` を使う)、
+
+| ファイル             | 確かめていること                                                      |
+| -------------------- | --------------------------------------------------------------------- |
+| `readme.test.ts`     | この README の「できること」の例                                      |
+| `japanese.test.ts`   | 日本語の入力で起きやすいこと (全角・半角カナ・BOM・Excel のコピペ…)   |
+| `convert.test.ts`    | [SPEC.md](SPEC.md) の挙動 (並び順・trim・必須・文字数・ヘッダ・上限…) |
+| `validators.test.ts` | 用意している検査                                                      |
+| `controller.test.ts` | `createCsvJson` (入力画面の状態)                                      |
+
+Jest で流すなら、各ファイル先頭の `from "vitest"` の行を消し (Jest のグローバルの `describe` / `it` / `expect` を使う)、
 `vi.fn()` を `jest.fn()` に置き換える。テストを使わないなら `*.test.ts` は消してよい。

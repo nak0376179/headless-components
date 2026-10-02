@@ -34,6 +34,9 @@ describe("CSV/TSV の書き出し (pnpm handoff)", () => {
         "csv-json/SPEC.md",
         "csv-json/convert.ts",
         "csv-json/convert.test.ts",
+        "csv-json/japanese.test.ts",
+        "csv-json/readme.test.ts",
+        "store.test.ts",
       ]),
     )
     // data-table や draft は入らない

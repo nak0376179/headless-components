@@ -6,7 +6,7 @@
   "scripts": {
     "dev:react": "pnpm --filter hc-react dev",
     "dev:nuxt": "pnpm --filter hc-nuxt dev",
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "test:watch": "vitest",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",
@@ -29,6 +29,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
     "@vitejs/plugin-vue": "^6.0.7",
+    "@vitest/coverage-v8": "^4.1.11",
     "@vue/test-utils": "^2.4.6",
     "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",

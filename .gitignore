@@ -1,10 +1,10 @@
-node_modules/
-dist/
-coverage/
 *.local
 .DS_Store
-.playwright-cli/
+.data/
 .nuxt/
 .output/
-.data/
+.playwright-cli/
+coverage/
+dist/
 handoff/
+node_modules/

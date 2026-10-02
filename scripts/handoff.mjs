@@ -9,7 +9,7 @@
 //   pnpm handoff --sync       # README のコード例 (<!-- file: … -->) を実ファイルの中身に合わせる
 //   --out <dir>               # 書き出し先 (既定 handoff/csv-json)
 //
-// 中身: utils/{README.md, index.ts, store.ts, csv-json/{README.md, SPEC.md, *.ts, *.test.ts}}
+// 中身: utils/{README.md, index.ts, store.ts, store.test.ts, csv-json/{README.md, SPEC.md, *.ts, *.test.ts}}
 import { execFileSync, execSync } from "node:child_process"
 import fs from "node:fs"
 import os from "node:os"
@@ -52,7 +52,9 @@ export function collect() {
     const text = fs.readFileSync(full, "utf8")
     files.set(`csv-json/${rel}`, rel === "README.md" ? syncReadme(text) : text)
   }
-  files.set("store.ts", fs.readFileSync(path.join(SRC, "store.ts"), "utf8"))
+  for (const f of ["store.ts", "store.test.ts"]) {
+    files.set(f, fs.readFileSync(path.join(SRC, f), "utf8"))
+  }
   files.set(
     "index.ts",
     [
@@ -100,7 +102,7 @@ CSV / TSV を列定義に従って検証し、JSON / CSV / TSV に変換する�
 
 - 使い方 (導入・列定義・React / Vue での画面の作り方): [csv-json/README.md](csv-json/README.md)
 - 挙動の仕様: [csv-json/SPEC.md](csv-json/SPEC.md)
-- テスト: \`csv-json/*.test.ts\` (Vitest)
+- テスト: \`*.test.ts\` (Vitest)。本体 (\`csv-json/*.ts\`・\`store.ts\`) のカバレッジは文・分岐・関数・行とも 100%
 
 ## 導入
 
@@ -125,6 +127,10 @@ import { convertDelimitedText, createCsvJson, email, type ColumnSpec } from "@/u
 | \`csv-json/validators.ts\` | よく使う検査 (\`email\` \`numeric\` \`zenkakuKatakana\` …) |
 | \`csv-json/controller.ts\` | 入力画面の状態 (\`createCsvJson\`) |
 | \`store.ts\` | \`createCsvJson\` が使う小さなストア |
+| \`csv-json/readme.test.ts\` | README の「できること」の例 |
+| \`csv-json/japanese.test.ts\` | 日本語の入力 (Excel のコピペ・全角/半角・BOM・サロゲートペア…) |
+| \`csv-json/convert.test.ts\` | 仕様 (SPEC.md) の挙動 |
+| \`csv-json/validators.test.ts\` / \`controller.test.ts\` / \`store.test.ts\` | 検査・入力画面の状態・ストア |
 
 外部への依存は papaparse だけ。中のファイルどうしは相対パスで参照しているので、フォルダの名前や置き場所を変えても動く。
 
@@ -230,7 +236,10 @@ function main() {
 
   if (has("--zip")) {
     const zip = path.join(path.dirname(out), `csv-json-utils-${commit}.zip`)
-    fs.rmSync(zip, { force: true })
+    // 前に作った zip (別の commit のもの) は消す。どれが最新か迷わないように
+    for (const f of fs.readdirSync(path.dirname(out))) {
+      if (/^csv-json-utils-.+\.zip$/.test(f)) fs.rmSync(path.join(path.dirname(out), f))
+    }
     // Windows 10 以降と macOS の tar (bsdtar) は -a で拡張子から zip を作れる。
     // Windows では Git Bash の GNU tar (zip を作れず、C: をホスト名と読む) を避けて System32 のものを使う。
     const tar =
